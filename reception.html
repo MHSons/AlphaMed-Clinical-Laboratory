@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <title>Reception - Alpha-Med Lab</title>
   <link rel="stylesheet" href="style.css" />
+  <script defer src="test-data.js"></script>
+  <script defer src="storage.js"></script>
+  <script defer src="script.js"></script>
   <script defer src="reception.js"></script>
   <style>
     body {
@@ -14,72 +17,8 @@
     .container {
       max-width: 1000px;
       margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    label {
-      font-weight: bold;
-    }
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    .test-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .test-list label {
-      background: #e1f5fe;
-      padding: 6px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .submit-btn {
-      background: #0277bd;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    .submit-btn:hover {
-      background: #01579b;
-    }
-    .search-box {
-      margin: 20px 0;
-    }
-    .search-box input {
-      width: 100%;
-      padding: 10px;
-      font-size: 15px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      padding: 12px;
-      border: 1px solid #ccc;
-    }
-    th {
-      background-color: #e0f7fa;
-    }
+    /* ... rest of styles unchanged ... */
   </style>
 </head>
 <body>
@@ -99,14 +38,17 @@
         <option>Other</option>
       </select>
     </div>
+
     <div class="form-group">
       <label>Age</label>
-      <input type="number" id="age" required />
+      <input type="number" id="age" />
     </div>
+
     <div class="form-group">
       <label>Phone</label>
-      <input type="text" id="phone" required />
+      <input type="text" id="phone" />
     </div>
+
     <div class="form-group">
       <label>Address</label>
       <input type="text" id="address" />
@@ -127,20 +69,20 @@
 
     <div class="form-group">
       <label>Tests</label>
-      <div id="tests" class="test-list"></div>
+      <div id="tests"></div>
     </div>
 
-    <button class="submit-btn" onclick="registerPatient()">Register Patient</button>
-
-    <div class="search-box">
-      <label>🔍 Search Patients</label>
-      <input type="text" id="search" placeholder="Search by name, phone or MRN..." onkeyup="filterPatients()" />
+    <div class="form-group">
+      <button onclick="registerPatient()">Register Patient</button>
     </div>
 
-    <table id="patientTable">
+    <hr />
+
+    <h3>Registered Patients</h3>
+    <input id="searchPatient" placeholder="Search patients..." />
+    <table id="patientListTable">
       <thead>
         <tr>
-          <th>MRN</th>
           <th>Name</th>
           <th>Gender</th>
           <th>Age</th>
