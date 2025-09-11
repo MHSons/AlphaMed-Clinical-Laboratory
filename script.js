@@ -1,65 +1,64 @@
-// Toggle password visibility
-function togglePassword(id) {
-  const passwordField = document.getElementById(id);
-  if (passwordField.type === "password") {
-    passwordField.type = "text";
+// ✅ Simple login system (local demo)
+function loginUser(event) {
+  event.preventDefault();
+
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  // ✅ Hardcoded users for demo
+  const users = {
+    "admin": { password: "admin123", role: "admin", redirect: "admin.html" },
+    "reception": { password: "recept123", role: "reception", redirect: "reception.html" },
+    "technician": { password: "tech123", role: "technician", redirect: "technician.html" }
+  };
+
+  if (!username || !password) {
+    alert("Please enter username and password.");
+    return;
+  }
+
+  const user = users[username.toLowerCase()];
+
+  if (user && user.password === password) {
+    // Save session
+    localStorage.setItem("loggedInUser", JSON.stringify({ username, role: user.role }));
+    alert(`Welcome ${username}! Redirecting...`);
+    window.location.href = user.redirect;
   } else {
-    passwordField.type = "password";
+    alert("Invalid username or password.");
   }
 }
 
-// Validate CNIC format
-function validateCNIC(cnic) {
-  const cnicRegex = /^\d{5}-\d{7}-\d{1}$/;
-  return cnicRegex.test(cnic);
-}
-
-// Show alert helper
-function showAlert(msg) {
-  alert(msg);
-}
-
-// Attach search helper for tables
-function attachTableSearch(inputId, tableId) {
-  const input = document.getElementById(inputId);
-  const table = document.getElementById(tableId);
-  if (!input || !table) return;
-  input.addEventListener('keyup', function () {
-    const filter = input.value.toLowerCase();
-    const rows = table.getElementsByTagName('tr');
-    Array.from(rows).forEach((row, i) => {
-      if (i === 0) return; // skip header
-      row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
-    });
-  });
-}
-
-// --- Unified auth and helpers added ---
-function loginUser(username, password) {
-  const users = JSON.parse(localStorage.getItem('users') || '[]');
-  const user = users.find(u => u.username === username && u.password === password);
+// ✅ Check login on each page
+function checkLogin(requiredRole) {
+  const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
   if (!user) {
-    alert('Invalid credentials');
-    return false;
+    alert("You must login first.");
+    window.location.href = "index.html"; // redirect to login
+    return;
   }
-  sessionStorage.setItem('currentUser', JSON.stringify({username: user.username, role: user.role}));
-  if (user.role === 'admin') window.location.href = 'admin-dashboard.html';
-  else if (user.role === 'reception') window.location.href = 'reception_dashboard.html';
-  else if (user.role === 'technician') window.location.href = 'technician_dashboard.html';
-  else window.location.href = 'index.html';
-  return true;
+
+  if (requiredRole && user.role !== requiredRole) {
+    alert("Access denied!");
+    window.location.href = "index.html";
+  }
 }
 
-// Seed basic users if not present
-(function seedDefaultUsers(){
-  if (!localStorage.getItem('users')) {
-    const defaultUsers = [
-      {username: 'admin', password: 'admin123', role: 'admin'},
-      {username: 'reception', password: 'recept123', role: 'reception'},
-      {username: 'tech', password: 'tech123', role: 'technician'}
-    ];
-    localStorage.setItem('users', JSON.stringify(defaultUsers));
-    console.log('Default users seeded.');
-  }
-})();
-// --- end auth helpers ---
+// ✅ Logout function
+function logoutUser() {
+  localStorage.removeItem("loggedInUser");
+  alert("Logged out successfully.");
+  window.location.href = "index.html";
+}
+
+// ✅ Date formatter
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  return `${d.getDate().toString().padStart(2,"0")}-${(d.getMonth()+1).toString().padStart(2,"0")}-${d.getFullYear()}`;
+}
+
+// ✅ Random ID generator (for patients/tests if needed)
+function generateId(prefix="ID") {
+  return prefix + "_" + Math.random().toString(36).substr(2, 9);
+}
