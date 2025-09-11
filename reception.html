@@ -5,7 +5,7 @@
   <title>Reception - Alpha-Med Lab</title>
   <link rel="stylesheet" href="style.css" />
 
-  <!-- ✅ Script order fixed -->
+  <!-- ✅ Script order -->
   <script defer src="test-data.js"></script>
   <script defer src="storage.js"></script>
   <script defer src="script.js"></script>
@@ -14,19 +14,43 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f2f2f2;
+      background-color: #f9f9f9;
+      margin: 0;
       padding: 20px;
     }
     .container {
       max-width: 1000px;
       margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    label { display: block; margin-top: 10px; }
-    select, input, button { margin-top: 5px; padding: 6px; width: 100%; }
-    button { background: #007BFF; color: white; border: none; cursor: pointer; }
+    h2, h3 { color: #333; margin-bottom: 10px; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: 600; margin-bottom: 5px; }
+    input, select, button {
+      padding: 8px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #007BFF;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
     button:hover { background: #0056b3; }
-    table { width: 100%; margin-top: 15px; border-collapse: collapse; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    #tests label { display: block; margin-bottom: 4px; }
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ddd; padding: 8px; text-align: left;
+    }
+    th { background: #007BFF; color: white; }
+    tr:nth-child(even) { background: #f2f2f2; }
   </style>
 </head>
 <body>
@@ -65,7 +89,6 @@
 
     <div class="form-group">
       <label>Department</label>
-      <!-- ✅ onchange fixed -->
       <select id="department" onchange="loadTestsByDepartment()" required>
         <option value="">-- Select Department --</option>
         <option value="Hematology">Hematology</option>
@@ -74,6 +97,30 @@
         <option value="Microbiology">Microbiology</option>
         <option value="Urine">Urine</option>
         <option value="Stool">Stool</option>
+        <option value="Immunology">Immunology</option>
+        <option value="Pathology">Pathology</option>
+        <option value="Endocrinology">Endocrinology</option>
+        <option value="Toxicology">Toxicology</option>
+        <option value="Molecular Biology">Molecular Biology</option>
+        <option value="Virology">Virology</option>
+        <option value="Parasitology">Parasitology</option>
+        <option value="Histopathology">Histopathology</option>
+        <option value="Genetics">Genetics</option>
+        <option value="Oncology">Oncology</option>
+        <option value="Allergy Testing">Allergy Testing</option>
+        <option value="Blood Bank">Blood Bank</option>
+        <option value="Cytology">Cytology</option>
+        <option value="Dermatology">Dermatology</option>
+        <option value="Cardiology">Cardiology</option>
+        <option value="Neurology">Neurology</option>
+        <option value="Gastroenterology">Gastroenterology</option>
+        <option value="Nephrology">Nephrology</option>
+        <option value="Pulmonology">Pulmonology</option>
+        <option value="Rheumatology">Rheumatology</option>
+        <option value="Infectious Diseases">Infectious Diseases</option>
+        <option value="Sports Medicine">Sports Medicine</option>
+        <option value="Occupational Health">Occupational Health</option>
+        <option value="General Screening">General Screening</option>
       </select>
     </div>
 
