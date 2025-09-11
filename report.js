@@ -1,5 +1,5 @@
 // ✅ Report Generator using jsPDF
-// Make sure you have added in index.html:
+// index.html میں یہ add ہونا لازمی ہے:
 // <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 async function generateReport(patient, resultValue) {
@@ -8,7 +8,7 @@ async function generateReport(patient, resultValue) {
 
   // ✅ Header
   const logo = new Image();
-  logo.src = "logo.png"; // Put your logo file in same folder
+  logo.src = "logo.png"; // Put your logo in same folder
   await new Promise(r => (logo.onload = r));
   doc.addImage(logo, "PNG", 10, 8, 20, 20);
 
@@ -17,7 +17,7 @@ async function generateReport(patient, resultValue) {
 
   // ✅ QR Code
   const qrCanvas = document.createElement("canvas");
-  const qrData = `${patient.name} | ${patient.age} | ${patient.gender} | ${patient.department} | ${patient.test}`;
+  const qrData = `MRN: ${patient.id} | ${patient.name} | ${patient.test} | ${resultValue}`;
   await QRCode.toCanvas(qrCanvas, qrData, { width: 60 });
   const qrDataURL = qrCanvas.toDataURL("image/png");
   doc.addImage(qrDataURL, "PNG", 170, 8, 30, 30);
@@ -36,11 +36,13 @@ async function generateReport(patient, resultValue) {
   // ✅ Result Section
   doc.setFontSize(14);
   doc.text("Test Result", 14, 105);
-  doc.setFontSize(12);
-  doc.text(`Result: ${resultValue}`, 20, 115);
-  doc.text(`Normal Range: Auto (as per DB)`, 20, 122);
 
-  // ✅ Watermark (Lab Monogram)
+  doc.setFontSize(12);
+  doc.text(`Parameter: ${patient.parameter}`, 20, 115);
+  doc.text(`Result: ${resultValue}`, 20, 122);
+  doc.text(`Normal Range: ${patient.range}`, 20, 129);
+
+  // ✅ Watermark
   doc.setFontSize(50);
   doc.setTextColor(200, 200, 200);
   doc.text("AlphaMed", 105, 160, { align: "center", angle: 45 });
@@ -54,9 +56,9 @@ async function generateReport(patient, resultValue) {
   window.open(doc.output("bloburl"), "_blank");
 }
 
-// ✅ Print Report Directly
+// ✅ Print Report
 function printReport(patient, resultValue) {
-  generateReport(patient, resultValue); // PDF opens → user can print
+  generateReport(patient, resultValue);
 }
 
 // ✅ Download Report
@@ -69,8 +71,11 @@ async function downloadReport(patient, resultValue) {
 
   doc.setFontSize(12);
   doc.text(`Patient: ${patient.name} (${patient.age}, ${patient.gender})`, 14, 40);
-  doc.text(`Test: ${patient.test}`, 14, 50);
-  doc.text(`Result: ${resultValue}`, 14, 60);
+  doc.text(`Department: ${patient.department}`, 14, 47);
+  doc.text(`Test: ${patient.test}`, 14, 54);
+  doc.text(`Parameter: ${patient.parameter}`, 14, 61);
+  doc.text(`Result: ${resultValue}`, 14, 68);
+  doc.text(`Normal Range: ${patient.range}`, 14, 75);
 
   // ✅ Watermark
   doc.setFontSize(40);
