@@ -19,13 +19,27 @@ function showSection(id) {
   document.getElementById(id).classList.remove("hidden");
 }
 
-// ✅ Initialize Departments (if empty)
+// ✅ Initialize Departments (with Normal Ranges)
 function initDepartments() {
   let departments = loadData(DEPARTMENTS_KEY);
   if (departments.length === 0) {
     departments = [
-      { name: "Biochemistry", tests: ["LFT", "RFT", "Glucose"] },
-      { name: "Hematology", tests: ["CBC", "Platelet Count", "Hemoglobin"] }
+      {
+        name: "Biochemistry",
+        tests: [
+          { name: "LFT", range: "10-40 U/L", parameter: "ALT/SGPT" },
+          { name: "RFT", range: "0.6-1.2 mg/dl", parameter: "Creatinine" },
+          { name: "Glucose", range: "70-110 mg/dl", parameter: "Fasting Sugar" }
+        ]
+      },
+      {
+        name: "Hematology",
+        tests: [
+          { name: "CBC", range: "4.0-11.0 x10^9/L", parameter: "WBC Count" },
+          { name: "Platelet Count", range: "150-450 x10^9/L", parameter: "Platelets" },
+          { name: "Hemoglobin", range: "13-17 g/dl", parameter: "Hb" }
+        ]
+      }
     ];
     saveData(DEPARTMENTS_KEY, departments);
   }
@@ -37,14 +51,23 @@ document.getElementById("patientForm")?.addEventListener("submit", e => {
   e.preventDefault();
 
   const patients = loadData(PATIENTS_KEY);
+  const departments = loadData(DEPARTMENTS_KEY);
+
+  const department = document.getElementById("department").value;
+  const test = document.getElementById("testName").value;
+
+  const selectedDept = departments.find(d => d.name === department);
+  const selectedTest = selectedDept.tests.find(t => t.name === test);
 
   const patient = {
     id: Date.now(),
     name: document.getElementById("patientName").value,
     age: document.getElementById("patientAge").value,
     gender: document.getElementById("patientGender").value,
-    department: document.getElementById("department").value,
-    test: document.getElementById("testName").value,
+    department,
+    test,
+    range: selectedTest.range,
+    parameter: selectedTest.parameter,
     status: "Pending"
   };
 
@@ -72,6 +95,7 @@ function renderReception() {
       <div class="border p-2 rounded mb-2 bg-white shadow">
         <strong>${p.name}</strong> (${p.age}, ${p.gender}) <br>
         Dept: ${p.department} | Test: ${p.test} <br>
+        Normal Range: ${p.range} (${p.parameter}) <br>
         Status: <span class="font-semibold ${p.status === "Pending" ? "text-red-500" : "text-green-600"}">${p.status}</span>
       </div>`
     )
@@ -94,6 +118,7 @@ function renderTechnician() {
         return `
         <div class="border p-2 rounded mb-2 bg-white shadow">
           <p><strong>${p.name}</strong> | ${p.department} | ${p.test}</p>
+          <p>Parameter: ${p.parameter} | Normal Range: ${p.range}</p>
           <input type="text" id="result-${p.id}" placeholder="Enter Result" class="border p-1 rounded w-full mt-2">
           <button onclick="saveResult(${p.id})" class="mt-2 px-3 py-1 bg-green-600 text-white rounded">Save Result</button>
         </div>`;
@@ -102,6 +127,7 @@ function renderTechnician() {
         <div class="border p-2 rounded mb-2 bg-white shadow">
           <p><strong>${p.name}</strong> | ${p.department} | ${p.test}</p>
           <p class="text-green-700 font-semibold">Result: ${result?.result || "N/A"}</p>
+          <p>Normal Range: ${p.range} (${p.parameter})</p>
           <button onclick="printReport(${p.id})" class="mt-2 px-3 py-1 bg-blue-600 text-white rounded">Print Report</button>
           <button onclick="downloadReport(${p.id})" class="mt-2 px-3 py-1 bg-gray-700 text-white rounded">Download PDF</button>
         </div>`;
@@ -135,7 +161,7 @@ function saveResult(patientId) {
   alert("Result saved ✅");
 }
 
-// ✅ Render Admin Panel (Enhanced with Dept/Test Management)
+// ✅ Render Admin Panel (with Range & Params)
 function renderAdmin() {
   const patients = loadData(PATIENTS_KEY);
   const results = loadData(RESULTS_KEY);
@@ -152,6 +178,7 @@ function renderAdmin() {
         return `
         <div class="border p-2 rounded mb-2 bg-white shadow">
           <strong>${p.name}</strong> (${p.department} - ${p.test}) <br>
+          Parameter: ${p.parameter} | Normal Range: ${p.range} <br>
           Status: ${p.status} <br>
           ${result ? `Result: <span class="font-semibold">${result.result}</span> (on ${result.date})` : ""}
           ${
@@ -173,7 +200,8 @@ function renderAdmin() {
         d => `
         <div class="border p-2 rounded mb-2 bg-white shadow">
           <strong>${d.name}</strong><br>
-          Tests: ${d.tests.join(", ")}
+          Tests:<br>
+          ${d.tests.map(t => `- ${t.name} (${t.parameter}) [${t.range}]`).join("<br>")}
         </div>`
       )
       .join("")}
@@ -188,6 +216,8 @@ function renderAdmin() {
         ${departments.map(d => `<option value="${d.name}">${d.name}</option>`).join("")}
       </select>
       <input id="newTest" placeholder="New Test" class="border p-1 rounded">
+      <input id="newParam" placeholder="Parameter" class="border p-1 rounded">
+      <input id="newRange" placeholder="Normal Range" class="border p-1 rounded">
       <button onclick="addTest()" class="px-3 py-1 bg-indigo-600 text-white rounded">Add Test</button>
     </div>
 
@@ -215,11 +245,14 @@ function addDepartment() {
 function addTest() {
   const deptName = document.getElementById("deptSelect").value;
   const test = document.getElementById("newTest").value.trim();
-  if (!test) return alert("Enter test name!");
+  const param = document.getElementById("newParam").value.trim();
+  const range = document.getElementById("newRange").value.trim();
+
+  if (!test || !param || !range) return alert("Enter test, parameter, and range!");
 
   const departments = loadData(DEPARTMENTS_KEY);
   const dept = departments.find(d => d.name === deptName);
-  dept.tests.push(test);
+  dept.tests.push({ name: test, parameter: param, range });
 
   saveData(DEPARTMENTS_KEY, departments);
 
@@ -241,13 +274,13 @@ function renderDeptDropdown() {
   // ✅ Auto-update test list on dept change
   deptSelect.onchange = () => {
     const selected = departments.find(d => d.name === deptSelect.value);
-    testSelect.innerHTML = selected.tests.map(t => `<option value="${t}">${t}</option>`).join("");
+    testSelect.innerHTML = selected.tests.map(t => `<option value="${t.name}">${t.name}</option>`).join("");
   };
 
   // ✅ Initialize first dept tests
   if (departments.length > 0) {
     deptSelect.value = departments[0].name;
-    testSelect.innerHTML = departments[0].tests.map(t => `<option value="${t}">${t}</option>`).join("");
+    testSelect.innerHTML = departments[0].tests.map(t => `<option value="${t.name}">${t.name}</option>`).join("");
   }
 }
 
