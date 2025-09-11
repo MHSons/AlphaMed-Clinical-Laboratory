@@ -1,24 +1,38 @@
 // ✅ Local Storage Keys
 const PATIENTS_KEY = "alphaMed_patients";
 const RESULTS_KEY = "alphaMed_results";
+const DEPARTMENTS_KEY = "alphaMed_departments";
 
-// ✅ Load data from localStorage
+// ✅ Load data
 function loadData(key) {
   return JSON.parse(localStorage.getItem(key)) || [];
 }
 
-// ✅ Save data to localStorage
+// ✅ Save data
 function saveData(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
 
-// ✅ Navigation between sections
+// ✅ Navigation
 function showSection(id) {
   document.querySelectorAll("main section").forEach(sec => sec.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
 
-// ✅ Patient Entry (Reception Panel)
+// ✅ Initialize Departments (if empty)
+function initDepartments() {
+  let departments = loadData(DEPARTMENTS_KEY);
+  if (departments.length === 0) {
+    departments = [
+      { name: "Biochemistry", tests: ["LFT", "RFT", "Glucose"] },
+      { name: "Hematology", tests: ["CBC", "Platelet Count", "Hemoglobin"] }
+    ];
+    saveData(DEPARTMENTS_KEY, departments);
+  }
+}
+initDepartments();
+
+// ✅ Reception Patient Entry
 document.getElementById("patientForm")?.addEventListener("submit", e => {
   e.preventDefault();
 
@@ -96,7 +110,7 @@ function renderTechnician() {
     .join("");
 }
 
-// ✅ Save Result (Technician)
+// ✅ Save Result
 function saveResult(patientId) {
   const patients = loadData(PATIENTS_KEY);
   const results = loadData(RESULTS_KEY);
@@ -121,18 +135,21 @@ function saveResult(patientId) {
   alert("Result saved ✅");
 }
 
-// ✅ Render Admin Panel (Enhanced)
+// ✅ Render Admin Panel (Enhanced with Dept/Test Management)
 function renderAdmin() {
   const patients = loadData(PATIENTS_KEY);
   const results = loadData(RESULTS_KEY);
+  const departments = loadData(DEPARTMENTS_KEY);
   const container = document.getElementById("adminOutput");
 
   if (!container) return;
 
-  container.innerHTML = patients
-    .map(p => {
-      const result = results.find(r => r.patientId === p.id);
-      return `
+  container.innerHTML = `
+    <h3 class="text-lg font-bold mb-2">Patients</h3>
+    ${patients
+      .map(p => {
+        const result = results.find(r => r.patientId === p.id);
+        return `
         <div class="border p-2 rounded mb-2 bg-white shadow">
           <strong>${p.name}</strong> (${p.department} - ${p.test}) <br>
           Status: ${p.status} <br>
@@ -147,18 +164,102 @@ function renderAdmin() {
               : ""
           }
         </div>`;
-    })
-    .join("");
+      })
+      .join("")}
+
+    <h3 class="text-lg font-bold mt-4 mb-2">Departments & Tests</h3>
+    ${departments
+      .map(
+        d => `
+        <div class="border p-2 rounded mb-2 bg-white shadow">
+          <strong>${d.name}</strong><br>
+          Tests: ${d.tests.join(", ")}
+        </div>`
+      )
+      .join("")}
+
+    <div class="mt-4">
+      <input id="newDept" placeholder="New Department" class="border p-1 rounded">
+      <button onclick="addDepartment()" class="px-3 py-1 bg-purple-600 text-white rounded">Add Department</button>
+    </div>
+
+    <div class="mt-2">
+      <select id="deptSelect" class="border p-1 rounded">
+        ${departments.map(d => `<option value="${d.name}">${d.name}</option>`).join("")}
+      </select>
+      <input id="newTest" placeholder="New Test" class="border p-1 rounded">
+      <button onclick="addTest()" class="px-3 py-1 bg-indigo-600 text-white rounded">Add Test</button>
+    </div>
+
+    <div class="mt-4">
+      <button onclick="resetData()" class="px-3 py-1 bg-red-600 text-white rounded">Clear All Data</button>
+    </div>
+  `;
 }
 
-// ✅ Clear All Data (Admin)
+// ✅ Add Department
+function addDepartment() {
+  const name = document.getElementById("newDept").value.trim();
+  if (!name) return alert("Enter department name!");
+
+  const departments = loadData(DEPARTMENTS_KEY);
+  departments.push({ name, tests: [] });
+  saveData(DEPARTMENTS_KEY, departments);
+
+  renderAdmin();
+  renderDeptDropdown();
+  alert("Department added ✅");
+}
+
+// ✅ Add Test
+function addTest() {
+  const deptName = document.getElementById("deptSelect").value;
+  const test = document.getElementById("newTest").value.trim();
+  if (!test) return alert("Enter test name!");
+
+  const departments = loadData(DEPARTMENTS_KEY);
+  const dept = departments.find(d => d.name === deptName);
+  dept.tests.push(test);
+
+  saveData(DEPARTMENTS_KEY, departments);
+
+  renderAdmin();
+  renderDeptDropdown();
+  alert("Test added ✅");
+}
+
+// ✅ Render Dept/Test dropdowns in Reception
+function renderDeptDropdown() {
+  const departments = loadData(DEPARTMENTS_KEY);
+  const deptSelect = document.getElementById("department");
+  const testSelect = document.getElementById("testName");
+
+  if (!deptSelect || !testSelect) return;
+
+  deptSelect.innerHTML = departments.map(d => `<option value="${d.name}">${d.name}</option>`).join("");
+
+  // ✅ Auto-update test list on dept change
+  deptSelect.onchange = () => {
+    const selected = departments.find(d => d.name === deptSelect.value);
+    testSelect.innerHTML = selected.tests.map(t => `<option value="${t}">${t}</option>`).join("");
+  };
+
+  // ✅ Initialize first dept tests
+  if (departments.length > 0) {
+    deptSelect.value = departments[0].name;
+    testSelect.innerHTML = departments[0].tests.map(t => `<option value="${t}">${t}</option>`).join("");
+  }
+}
+
+// ✅ Clear All Data
 function resetData() {
   if (confirm("Are you sure you want to delete all data?")) {
-    localStorage.removeItem(PATIENTS_KEY);
-    localStorage.removeItem(RESULTS_KEY);
+    localStorage.clear();
+    initDepartments();
     renderReception();
     renderTechnician();
     renderAdmin();
+    renderDeptDropdown();
     alert("All data cleared ❌");
   }
 }
@@ -187,3 +288,4 @@ function downloadReport(patientId) {
 renderReception();
 renderTechnician();
 renderAdmin();
+renderDeptDropdown();
