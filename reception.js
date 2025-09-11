@@ -1,5 +1,12 @@
 // Load tests by department
 function loadTestsByDepartment() {
+  if (!window.testData) {
+    console.warn('testData not loaded');
+    const testsContainer = document.getElementById('tests');
+    if (testsContainer) testsContainer.innerHTML = '<em>Tests not available (data missing).</em>';
+    return;
+  }
+
   const department = document.getElementById("department").value;
   const testsContainer = document.getElementById("tests");
   testsContainer.innerHTML = "";
@@ -17,82 +24,61 @@ function loadTestsByDepartment() {
 function registerPatient() {
   const name = document.getElementById("name").value.trim();
   const gender = document.getElementById("gender").value;
-  const age = document.getElementById("age").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const address = document.getElementById("address").value.trim();
+  const age = document.getElementById("age").value;
+  const phone = document.getElementById("phone").value;
+  const address = document.getElementById("address").value;
   const department = document.getElementById("department").value;
 
-  const selectedTests = Array.from(document.querySelectorAll("#tests input[type='checkbox']:checked")).map(cb => cb.value);
+  const testsChecked = Array.from(document.querySelectorAll('#tests input[type="checkbox"]:checked')).map(c => c.value);
 
-  if (!name || !gender || !age || !phone || !department || selectedTests.length === 0) {
-    alert("Please fill all fields and select at least one test.");
+  if (!name || !department) {
+    alert("Please fill required fields (Name and Department).");
     return;
   }
 
-  const patientId = "MRN-" + Date.now().toString().slice(-6);
-  const date = new Date().toLocaleString();
-
   const patient = {
-    id: patientId,
-    name,
-    gender,
-    age,
-    phone,
-    address,
-    department,
-    tests: selectedTests,
-    date
+    id: Date.now(),
+    name, gender, age, phone, address, department, tests: testsChecked, date: new Date().toISOString()
   };
 
-  // Store in localStorage
-  let patients = JSON.parse(localStorage.getItem("patients") || "[]");
-  patients.push(patient);
-  localStorage.setItem("patients", JSON.stringify(patients));
-
-  // Save current patient in session for slip
-  sessionStorage.setItem("currentPatient", JSON.stringify(patient));
+  // Prefer storage helper if available
+  if (typeof savePatient === 'function') {
+    const ok = savePatient(patient);
+    if (!ok) return;
+  } else {
+    const patients = JSON.parse(localStorage.getItem("patients") || "[]");
+    patients.push(patient);
+    localStorage.setItem("patients", JSON.stringify(patients));
+    sessionStorage.setItem("currentPatient", JSON.stringify(patient));
+  }
 
   alert("Patient registered successfully!");
-
-  // Redirect to slip page
-  window.location.href = "registration-slip.html";
+  loadPatientList();
+  // Optionally redirect to slip
+  // window.location.href = "registration-slip.html";
 }
 
 // Load patient list in table
 function loadPatientList() {
-  const patients = JSON.parse(localStorage.getItem("patients") || "[]");
-  const tbody = document.getElementById("patientList");
-  if (!tbody) return;
+  // Prefer storage.getAllPatients if available
+  const patients = (typeof getAllPatients === 'function') ? getAllPatients() : JSON.parse(localStorage.getItem('patients')||'[]');
 
+  const tbody = document.getElementById("patientList");
+  const table = document.getElementById("patientListTable");
   tbody.innerHTML = "";
-  patients.reverse().forEach(p => {
+  patients.forEach(p => {
     const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${p.id}</td>
-      <td>${p.name}</td>
-      <td>${p.gender}</td>
-      <td>${p.age}</td>
-      <td>${p.phone}</td>
-      <td>${p.department}</td>
-      <td>${p.tests.join(", ")}</td>
-      <td>${p.date}</td>
-    `;
+    tr.innerHTML = `<td>${p.name}</td><td>${p.gender}</td><td>${p.age||''}</td><td>${p.phone||''}</td><td>${p.department||''}</td><td>${(p.tests||[]).join(", ")}</td><td>${(p.date||'').split("T")[0]}</td>`;
     tbody.appendChild(tr);
   });
+
+  // attach search if input present
+  if (document.getElementById('searchPatient')) {
+    attachTableSearch('searchPatient', 'patientListTable');
+  }
 }
 
-// Filter patient list by search input
-function filterPatients() {
-  const input = document.getElementById("search").value.toLowerCase();
-  const rows = document.querySelectorAll("#patientTable tbody tr");
-
-  rows.forEach(row => {
-    const text = row.innerText.toLowerCase();
-    row.style.display = text.includes(input) ? "" : "none";
-  });
-}
-
-// Auto-load patient list if element is present
+// initialize on load
 document.addEventListener("DOMContentLoaded", () => {
   loadPatientList();
 });
