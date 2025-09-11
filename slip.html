@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Patient Slip - Alpha-Med Clinical Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #fff;
+      background-image: url('logo.png');
+      background-size: 200px;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.95;
+    }
+
+    .slip-container {
+      max-width: 700px;
+      margin: 0 auto;
+      border: 2px solid #000;
+      padding: 20px;
+      background-color: white;
+      position: relative;
+    }
+
+    .lab-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .lab-header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .lab-header p {
+      font-size: 14px;
+    }
+
+    .section {
+      margin-bottom: 15px;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+    }
+
+    .section p {
+      margin: 5px 0;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-weight: bold;
+      font-size: 16px;
+      border-top: 1px dashed #000;
+      padding-top: 10px;
+    }
+
+    @media print {
+      button {
+        display: none;
+      }
+
+      body {
+        background: white;
+      }
+    }
+
+    .watermark {
+      position: absolute;
+      top: 40%;
+      left: 25%;
+      font-size: 50px;
+      color: #cccccc;
+      transform: rotate(-30deg);
+      pointer-events: none;
+      opacity: 0.2;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="slip-container">
+    <div class="lab-header">
+      <h2>Alpha-Med Clinical Lab</h2>
+      <p>Email: info@alphamedlab.com | Phone: 0300-0000000</p>
+    </div>
+
+    <div class="section">
+      <h3>Patient Information</h3>
+      <p><strong>Name:</strong> <span id="patientName"></span></p>
+      <p><strong>Age:</strong> <span id="patientAge"></span></p>
+      <p><strong>Gender:</strong> <span id="patientGender"></span></p>
+      <p><strong>CNIC:</strong> <span id="patientCNIC"></span></p>
+      <p><strong>Contact:</strong> <span id="patientPhone"></span></p>
+    </div>
+
+    <div class="section">
+      <h3>Test Details</h3>
+      <ul id="testList"></ul>
+    </div>
+
+    <div class="section">
+      <h3>Registered By</h3>
+      <p><strong>Receptionist:</strong> <span id="receptionist"></span></p>
+      <p><strong>Date:</strong> <span id="registrationDate"></span></p>
+    </div>
+
+    <div class="footer">
+      Alpha-Med Clinical Lab
+    </div>
+
+    <div class="watermark">Alpha-Med</div>
+  </div>
+
+  <div style="text-align:center; margin-top:20px;">
+    <button onclick="window.print()">🖨️ Print Slip</button>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = JSON.parse(localStorage.getItem("currentSlipData"));
+      if (!data) {
+        alert("No slip data found!");
+        return;
+      }
+
+      document.getElementById("patientName").innerText = data.name;
+      document.getElementById("patientAge").innerText = data.age;
+      document.getElementById("patientGender").innerText = data.gender;
+      document.getElementById("patientCNIC").innerText = data.cnic;
+      document.getElementById("patientPhone").innerText = data.phone;
+
+      document.getElementById("receptionist").innerText = data.receptionist;
+      document.getElementById("registrationDate").innerText = data.date;
+
+      const testList = document.getElementById("testList");
+      data.tests.forEach(test => {
+        const li = document.createElement("li");
+        li.innerText = test;
+        testList.appendChild(li);
+      });
+    });
+  </script>
+</body>
+</html>

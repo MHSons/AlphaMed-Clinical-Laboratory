@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registration Slip</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #f3f3f3;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 40px;
+    }
+
+    .slip-container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .header h2 {
+      margin-bottom: 5px;
+    }
+
+    .header img {
+      height: 70px;
+    }
+
+    .info-row {
+      display: flex;
+      flex-wrap: wrap; /* ✅ Makes content wrap on small screens */
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 16px;
+      word-break: break-word;
+    }
+
+    .info-row span {
+      font-weight: 600;
+    }
+
+    .qr {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+      }
+
+      .slip-container {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+
+      .no-print {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body onload="loadSlip(); window.print();">
+
+  <div class="slip-container">
+    <div class="header">
+      <img src="logo.png" alt="Lab Logo" />
+      <h2>Alpha-Med Diagnostic Lab</h2>
+      <p>Patient Registration Slip</p>
+    </div>
+
+    <div class="info-row"><span>MRN:</span> <span id="mrn"></span></div>
+    <div class="info-row"><span>Name:</span> <span id="name"></span></div>
+    <div class="info-row"><span>Gender:</span> <span id="gender"></span></div>
+    <div class="info-row"><span>Age:</span> <span id="age"></span></div>
+    <div class="info-row"><span>Phone:</span> <span id="phone"></span></div>
+    <div class="info-row"><span>Address:</span> <span id="address"></span></div>
+    <div class="info-row"><span>Date:</span> <span id="date"></span></div>
+
+    <div class="qr">
+      <img id="qrImage" src="" alt="QR Code" />
+    </div>
+  </div>
+
+  <p class="no-print" style="text-align:center; color:#777; font-size:14px; margin-top:20px;">
+    This slip will automatically print. If not, press Ctrl+P or use your browser's print option.
+  </p>
+
+  <script>
+    function loadSlip() {
+      const patient = JSON.parse(localStorage.getItem("latestPatient"));
+      if (!patient) return;
+
+      document.getElementById("mrn").textContent = patient.mrn;
+      document.getElementById("name").textContent = patient.name;
+      document.getElementById("gender").textContent = patient.gender;
+      document.getElementById("age").textContent = patient.age;
+      document.getElementById("phone").textContent = patient.phone;
+      document.getElementById("address").textContent = patient.address;
+      document.getElementById("date").textContent = new Date().toLocaleString();
+
+      // QR code (optional)
+      if (patient.qrDataURL) {
+        document.getElementById("qrImage").src = patient.qrDataURL;
+      } else {
+        document.getElementById("qrImage").style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
