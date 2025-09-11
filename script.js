@@ -14,77 +14,52 @@ function validateCNIC(cnic) {
   return cnicRegex.test(cnic);
 }
 
-// Show alert
-function showAlert(message, type = "info") {
-  const color = {
-    success: "#28a745",
-    error: "#dc3545",
-    info: "#007bff"
-  }[type];
-
-  const alert = document.createElement("div");
-  alert.style.background = color;
-  alert.style.color = "#fff";
-  alert.style.padding = "10px";
-  alert.style.margin = "15px auto";
-  alert.style.width = "90%";
-  alert.style.borderRadius = "6px";
-  alert.style.textAlign = "center";
-  alert.innerText = message;
-
-  document.body.prepend(alert);
-
-  setTimeout(() => alert.remove(), 3000);
+// Show alert helper
+function showAlert(msg) {
+  alert(msg);
 }
 
-// Logout function
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
-
-// Load user from storage
-function loadUserInfo() {
-  const user = JSON.parse(localStorage.getItem("loggedInUser"));
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
-  const userInfoDiv = document.getElementById("userInfo");
-  if (userInfoDiv) {
-    userInfoDiv.innerHTML = `
-      <strong>${user.role}</strong> - ${user.name}<br>
-      <small>${user.cnic}</small>
-    `;
-  }
-}
-
-// Confirm before delete
-function confirmDelete(callback) {
-  if (confirm("Are you sure you want to delete this record?")) {
-    callback();
-  }
-}
-
-// Generate unique ID (for MRN or test entry)
-function generateID(prefix = "ID") {
-  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-}
-
-// Search filter for any table
-function setupSearch(inputId, tableId) {
+// Attach search helper for tables
+function attachTableSearch(inputId, tableId) {
   const input = document.getElementById(inputId);
   const table = document.getElementById(tableId);
   if (!input || !table) return;
-
-  input.addEventListener("keyup", function () {
+  input.addEventListener('keyup', function () {
     const filter = input.value.toLowerCase();
-    const rows = table.getElementsByTagName("tr");
-
+    const rows = table.getElementsByTagName('tr');
     Array.from(rows).forEach((row, i) => {
-      if (i === 0) return; // skip table header
-      const text = row.textContent.toLowerCase();
-      row.style.display = text.includes(filter) ? "" : "none";
+      if (i === 0) return; // skip header
+      row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
     });
   });
 }
+
+// --- Unified auth and helpers added ---
+function loginUser(username, password) {
+  const users = JSON.parse(localStorage.getItem('users') || '[]');
+  const user = users.find(u => u.username === username && u.password === password);
+  if (!user) {
+    alert('Invalid credentials');
+    return false;
+  }
+  sessionStorage.setItem('currentUser', JSON.stringify({username: user.username, role: user.role}));
+  if (user.role === 'admin') window.location.href = 'admin-dashboard.html';
+  else if (user.role === 'reception') window.location.href = 'reception_dashboard.html';
+  else if (user.role === 'technician') window.location.href = 'technician_dashboard.html';
+  else window.location.href = 'index.html';
+  return true;
+}
+
+// Seed basic users if not present
+(function seedDefaultUsers(){
+  if (!localStorage.getItem('users')) {
+    const defaultUsers = [
+      {username: 'admin', password: 'admin123', role: 'admin'},
+      {username: 'reception', password: 'recept123', role: 'reception'},
+      {username: 'tech', password: 'tech123', role: 'technician'}
+    ];
+    localStorage.setItem('users', JSON.stringify(defaultUsers));
+    console.log('Default users seeded.');
+  }
+})();
+// --- end auth helpers ---
