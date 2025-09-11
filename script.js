@@ -82,58 +82,138 @@ document.getElementById("patientForm")?.addEventListener("submit", e => {
   alert("Patient Added Successfully ✅");
 });
 
-// ✅ Render Reception Panel
-function renderReception() {
+// ✅ Reception Panel (with Search)
+function renderReception(searchQuery = "") {
   const patients = loadData(PATIENTS_KEY);
   const container = document.getElementById("receptionOutput");
-
   if (!container) return;
 
-  container.innerHTML = patients
-    .map(
-      p => `
+  const filtered = patients.filter(
+    p =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(p.id).includes(searchQuery)
+  );
+
+  container.innerHTML = `
+    <input type="text" id="searchReception" placeholder="Search by Name or MRN" class="border p-1 rounded mb-2 w-full">
+    ${filtered
+      .map(
+        p => `
       <div class="border p-2 rounded mb-2 bg-white shadow">
         <strong>${p.name}</strong> (${p.age}, ${p.gender}) <br>
+        MRN: ${p.id} <br>
         Dept: ${p.department} | Test: ${p.test} <br>
         Normal Range: ${p.range} (${p.parameter}) <br>
         Status: <span class="font-semibold ${p.status === "Pending" ? "text-red-500" : "text-green-600"}">${p.status}</span>
       </div>`
-    )
-    .join("");
+      )
+      .join("")}
+  `;
+
+  document.getElementById("searchReception").oninput = e => renderReception(e.target.value);
 }
 
-// ✅ Render Technician Panel
-function renderTechnician() {
+// ✅ Technician Panel (with Filter/Search)
+function renderTechnician(searchQuery = "", statusFilter = "All") {
   const patients = loadData(PATIENTS_KEY);
   const results = loadData(RESULTS_KEY);
   const container = document.getElementById("technicianOutput");
-
   if (!container) return;
 
-  container.innerHTML = patients
-    .map(p => {
-      const result = results.find(r => r.patientId === p.id);
+  let filtered = patients;
+  if (statusFilter !== "All") {
+    filtered = filtered.filter(p => p.status === statusFilter);
+  }
 
-      if (p.status === "Pending") {
+  filtered = filtered.filter(
+    p =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(p.id).includes(searchQuery)
+  );
+
+  container.innerHTML = `
+    <div class="flex gap-2 mb-2">
+      <input type="text" id="searchTech" placeholder="Search by Name or MRN" class="border p-1 rounded flex-1">
+      <select id="statusFilter" class="border p-1 rounded">
+        <option>All</option>
+        <option>Pending</option>
+        <option>Completed</option>
+      </select>
+    </div>
+    ${filtered
+      .map(p => {
+        const result = results.find(r => r.patientId === p.id);
+        if (p.status === "Pending") {
+          return `
+          <div class="border p-2 rounded mb-2 bg-white shadow">
+            <p><strong>${p.name}</strong> | ${p.department} | ${p.test}</p>
+            <p>Parameter: ${p.parameter} | Normal Range: ${p.range}</p>
+            <input type="text" id="result-${p.id}" placeholder="Enter Result" class="border p-1 rounded w-full mt-2">
+            <button onclick="saveResult(${p.id})" class="mt-2 px-3 py-1 bg-green-600 text-white rounded">Save Result</button>
+          </div>`;
+        } else {
+          return `
+          <div class="border p-2 rounded mb-2 bg-white shadow">
+            <p><strong>${p.name}</strong> | ${p.department} | ${p.test}</p>
+            <p class="text-green-700 font-semibold">Result: ${result?.result || "N/A"}</p>
+            <p>Normal Range: ${p.range} (${p.parameter})</p>
+            <button onclick="printReport(${p.id})" class="mt-2 px-3 py-1 bg-blue-600 text-white rounded">Print Report</button>
+            <button onclick="downloadReport(${p.id})" class="mt-2 px-3 py-1 bg-gray-700 text-white rounded">Download PDF</button>
+          </div>`;
+        }
+      })
+      .join("")}
+  `;
+
+  document.getElementById("searchTech").oninput = e => renderTechnician(e.target.value, document.getElementById("statusFilter").value);
+  document.getElementById("statusFilter").onchange = e => renderTechnician(document.getElementById("searchTech").value, e.target.value);
+}
+
+// ✅ Admin Panel (with Search)
+function renderAdmin(searchQuery = "") {
+  const patients = loadData(PATIENTS_KEY);
+  const results = loadData(RESULTS_KEY);
+  const departments = loadData(DEPARTMENTS_KEY);
+  const container = document.getElementById("adminOutput");
+  if (!container) return;
+
+  const filtered = patients.filter(
+    p =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(p.id).includes(searchQuery)
+  );
+
+  container.innerHTML = `
+    <h3 class="text-lg font-bold mb-2">Patients</h3>
+    <input type="text" id="searchAdmin" placeholder="Search by Name or MRN" class="border p-1 rounded mb-2 w-full">
+    ${filtered
+      .map(p => {
+        const result = results.find(r => r.patientId === p.id);
         return `
         <div class="border p-2 rounded mb-2 bg-white shadow">
-          <p><strong>${p.name}</strong> | ${p.department} | ${p.test}</p>
-          <p>Parameter: ${p.parameter} | Normal Range: ${p.range}</p>
-          <input type="text" id="result-${p.id}" placeholder="Enter Result" class="border p-1 rounded w-full mt-2">
-          <button onclick="saveResult(${p.id})" class="mt-2 px-3 py-1 bg-green-600 text-white rounded">Save Result</button>
+          <strong>${p.name}</strong> (${p.department} - ${p.test}) <br>
+          MRN: ${p.id} <br>
+          Parameter: ${p.parameter} | Normal Range: ${p.range} <br>
+          Status: ${p.status} <br>
+          ${result ? `Result: <span class="font-semibold">${result.result}</span> (on ${result.date})` : ""}
         </div>`;
-      } else {
-        return `
+      })
+      .join("")}
+
+    <h3 class="text-lg font-bold mt-4 mb-2">Departments & Tests</h3>
+    ${departments
+      .map(
+        d => `
         <div class="border p-2 rounded mb-2 bg-white shadow">
-          <p><strong>${p.name}</strong> | ${p.department} | ${p.test}</p>
-          <p class="text-green-700 font-semibold">Result: ${result?.result || "N/A"}</p>
-          <p>Normal Range: ${p.range} (${p.parameter})</p>
-          <button onclick="printReport(${p.id})" class="mt-2 px-3 py-1 bg-blue-600 text-white rounded">Print Report</button>
-          <button onclick="downloadReport(${p.id})" class="mt-2 px-3 py-1 bg-gray-700 text-white rounded">Download PDF</button>
-        </div>`;
-      }
-    })
-    .join("");
+          <strong>${d.name}</strong><br>
+          Tests:<br>
+          ${d.tests.map(t => `- ${t.name} (${t.parameter}) [${t.range}]`).join("<br>")}
+        </div>`
+      )
+      .join("")}
+  `;
+
+  document.getElementById("searchAdmin").oninput = e => renderAdmin(e.target.value);
 }
 
 // ✅ Save Result
@@ -159,162 +239,6 @@ function saveResult(patientId) {
   renderTechnician();
   renderAdmin();
   alert("Result saved ✅");
-}
-
-// ✅ Render Admin Panel (with Range & Params)
-function renderAdmin() {
-  const patients = loadData(PATIENTS_KEY);
-  const results = loadData(RESULTS_KEY);
-  const departments = loadData(DEPARTMENTS_KEY);
-  const container = document.getElementById("adminOutput");
-
-  if (!container) return;
-
-  container.innerHTML = `
-    <h3 class="text-lg font-bold mb-2">Patients</h3>
-    ${patients
-      .map(p => {
-        const result = results.find(r => r.patientId === p.id);
-        return `
-        <div class="border p-2 rounded mb-2 bg-white shadow">
-          <strong>${p.name}</strong> (${p.department} - ${p.test}) <br>
-          Parameter: ${p.parameter} | Normal Range: ${p.range} <br>
-          Status: ${p.status} <br>
-          ${result ? `Result: <span class="font-semibold">${result.result}</span> (on ${result.date})` : ""}
-          ${
-            result
-              ? `
-            <div class="mt-2">
-              <button onclick="printReport(${p.id})" class="px-3 py-1 bg-blue-600 text-white rounded">Print Report</button>
-              <button onclick="downloadReport(${p.id})" class="px-3 py-1 bg-gray-700 text-white rounded">Download PDF</button>
-            </div>`
-              : ""
-          }
-        </div>`;
-      })
-      .join("")}
-
-    <h3 class="text-lg font-bold mt-4 mb-2">Departments & Tests</h3>
-    ${departments
-      .map(
-        d => `
-        <div class="border p-2 rounded mb-2 bg-white shadow">
-          <strong>${d.name}</strong><br>
-          Tests:<br>
-          ${d.tests.map(t => `- ${t.name} (${t.parameter}) [${t.range}]`).join("<br>")}
-        </div>`
-      )
-      .join("")}
-
-    <div class="mt-4">
-      <input id="newDept" placeholder="New Department" class="border p-1 rounded">
-      <button onclick="addDepartment()" class="px-3 py-1 bg-purple-600 text-white rounded">Add Department</button>
-    </div>
-
-    <div class="mt-2">
-      <select id="deptSelect" class="border p-1 rounded">
-        ${departments.map(d => `<option value="${d.name}">${d.name}</option>`).join("")}
-      </select>
-      <input id="newTest" placeholder="New Test" class="border p-1 rounded">
-      <input id="newParam" placeholder="Parameter" class="border p-1 rounded">
-      <input id="newRange" placeholder="Normal Range" class="border p-1 rounded">
-      <button onclick="addTest()" class="px-3 py-1 bg-indigo-600 text-white rounded">Add Test</button>
-    </div>
-
-    <div class="mt-4">
-      <button onclick="resetData()" class="px-3 py-1 bg-red-600 text-white rounded">Clear All Data</button>
-    </div>
-  `;
-}
-
-// ✅ Add Department
-function addDepartment() {
-  const name = document.getElementById("newDept").value.trim();
-  if (!name) return alert("Enter department name!");
-
-  const departments = loadData(DEPARTMENTS_KEY);
-  departments.push({ name, tests: [] });
-  saveData(DEPARTMENTS_KEY, departments);
-
-  renderAdmin();
-  renderDeptDropdown();
-  alert("Department added ✅");
-}
-
-// ✅ Add Test
-function addTest() {
-  const deptName = document.getElementById("deptSelect").value;
-  const test = document.getElementById("newTest").value.trim();
-  const param = document.getElementById("newParam").value.trim();
-  const range = document.getElementById("newRange").value.trim();
-
-  if (!test || !param || !range) return alert("Enter test, parameter, and range!");
-
-  const departments = loadData(DEPARTMENTS_KEY);
-  const dept = departments.find(d => d.name === deptName);
-  dept.tests.push({ name: test, parameter: param, range });
-
-  saveData(DEPARTMENTS_KEY, departments);
-
-  renderAdmin();
-  renderDeptDropdown();
-  alert("Test added ✅");
-}
-
-// ✅ Render Dept/Test dropdowns in Reception
-function renderDeptDropdown() {
-  const departments = loadData(DEPARTMENTS_KEY);
-  const deptSelect = document.getElementById("department");
-  const testSelect = document.getElementById("testName");
-
-  if (!deptSelect || !testSelect) return;
-
-  deptSelect.innerHTML = departments.map(d => `<option value="${d.name}">${d.name}</option>`).join("");
-
-  // ✅ Auto-update test list on dept change
-  deptSelect.onchange = () => {
-    const selected = departments.find(d => d.name === deptSelect.value);
-    testSelect.innerHTML = selected.tests.map(t => `<option value="${t.name}">${t.name}</option>`).join("");
-  };
-
-  // ✅ Initialize first dept tests
-  if (departments.length > 0) {
-    deptSelect.value = departments[0].name;
-    testSelect.innerHTML = departments[0].tests.map(t => `<option value="${t.name}">${t.name}</option>`).join("");
-  }
-}
-
-// ✅ Clear All Data
-function resetData() {
-  if (confirm("Are you sure you want to delete all data?")) {
-    localStorage.clear();
-    initDepartments();
-    renderReception();
-    renderTechnician();
-    renderAdmin();
-    renderDeptDropdown();
-    alert("All data cleared ❌");
-  }
-}
-
-// ✅ Print Report
-function printReport(patientId) {
-  const patients = loadData(PATIENTS_KEY);
-  const results = loadData(RESULTS_KEY);
-  const patient = patients.find(p => p.id === patientId);
-  const result = results.find(r => r.patientId === patientId)?.result || "N/A";
-
-  generateReport(patient, result);
-}
-
-// ✅ Download Report
-function downloadReport(patientId) {
-  const patients = loadData(PATIENTS_KEY);
-  const results = loadData(RESULTS_KEY);
-  const patient = patients.find(p => p.id === patientId);
-  const result = results.find(r => r.patientId === patientId)?.result || "N/A";
-
-  window.downloadReport(patient, result);
 }
 
 // ✅ Initial Render
