@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlphaMed Clinical Laboratory</title>
+  
+  <!-- ✅ Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- ✅ QR Code + Barcode Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  
+  <!-- ✅ Main Script -->
+  <script defer src="script.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <header class="bg-blue-700 text-white p-4 flex justify-between items-center">
+    <img src="logo.png" alt="Lab Logo" class="h-12">
+    <h1 class="text-2xl font-bold">AlphaMed Clinical Laboratory</h1>
+    <canvas id="qrCode" class="h-12"></canvas>
+  </header>
+
+  <main class="p-6">
+    <!-- Navigation Tabs -->
+    <div class="flex space-x-4 mb-6">
+      <button onclick="showSection('reception')" class="px-4 py-2 bg-blue-600 text-white rounded">Reception</button>
+      <button onclick="showSection('technician')" class="px-4 py-2 bg-green-600 text-white rounded">Technician</button>
+      <button onclick="showSection('admin')" class="px-4 py-2 bg-gray-700 text-white rounded">Admin</button>
+    </div>
+
+    <!-- Reception Section -->
+    <section id="reception" class="hidden">
+      <h2 class="text-xl font-semibold mb-4">Reception Panel</h2>
+      <form id="patientForm" class="space-y-4">
+        <input type="text" id="patientName" placeholder="Patient Name" class="border p-2 w-full rounded">
+        <input type="number" id="patientAge" placeholder="Age" class="border p-2 w-full rounded">
+        <select id="patientGender" class="border p-2 w-full rounded">
+          <option>Male</option>
+          <option>Female</option>
+        </select>
+        <select id="department" class="border p-2 w-full rounded">
+          <option>Biochemistry</option>
+          <option>Hematology</option>
+          <option>Microbiology</option>
+        </select>
+        <input type="text" id="testName" placeholder="Test Name" class="border p-2 w-full rounded">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Save & Generate Report</button>
+      </form>
+      <div id="receptionOutput" class="mt-4"></div>
+    </section>
+
+    <!-- Technician Section -->
+    <section id="technician" class="hidden">
+      <h2 class="text-xl font-semibold mb-4">Technician Panel</h2>
+      <div id="technicianOutput"></div>
+    </section>
+
+    <!-- Admin Section -->
+    <section id="admin" class="hidden">
+      <h2 class="text-xl font-semibold mb-4">Admin Panel</h2>
+      <div class="space-y-4">
+        <button onclick="resetData()" class="px-4 py-2 bg-red-600 text-white rounded">Clear All Data</button>
+        <div id="adminOutput"></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
