@@ -19,7 +19,7 @@ function showSection(id) {
 }
 
 // ✅ Patient Entry (Reception Panel)
-document.getElementById("patientForm").addEventListener("submit", e => {
+document.getElementById("patientForm")?.addEventListener("submit", e => {
   e.preventDefault();
 
   const patients = loadData(PATIENTS_KEY);
@@ -37,7 +37,6 @@ document.getElementById("patientForm").addEventListener("submit", e => {
   patients.push(patient);
   saveData(PATIENTS_KEY, patients);
 
-  generateQRCode(patient);
   renderReception();
   renderTechnician();
   renderAdmin();
@@ -46,19 +45,12 @@ document.getElementById("patientForm").addEventListener("submit", e => {
   alert("Patient Added Successfully ✅");
 });
 
-// ✅ Generate QR code
-function generateQRCode(patient) {
-  const qrCanvas = document.getElementById("qrCode");
-  const data = `${patient.name} | ${patient.age} | ${patient.gender} | ${patient.department} | ${patient.test}`;
-  QRCode.toCanvas(qrCanvas, data, { width: 100 }, function (error) {
-    if (error) console.error(error);
-  });
-}
-
 // ✅ Render Reception Panel
 function renderReception() {
   const patients = loadData(PATIENTS_KEY);
   const container = document.getElementById("receptionOutput");
+
+  if (!container) return;
 
   container.innerHTML = patients
     .map(
@@ -72,22 +64,35 @@ function renderReception() {
     .join("");
 }
 
-// ✅ Render Technician Panel
+// ✅ Render Technician Panel (now includes Report buttons)
 function renderTechnician() {
   const patients = loadData(PATIENTS_KEY);
   const results = loadData(RESULTS_KEY);
   const container = document.getElementById("technicianOutput");
 
+  if (!container) return;
+
   container.innerHTML = patients
-    .filter(p => p.status === "Pending")
-    .map(
-      p => `
-      <div class="border p-2 rounded mb-2 bg-white shadow">
-        <p><strong>${p.name}</strong> | ${p.department} | ${p.test}</p>
-        <input type="text" id="result-${p.id}" placeholder="Enter Result" class="border p-1 rounded w-full mt-2">
-        <button onclick="saveResult(${p.id})" class="mt-2 px-3 py-1 bg-green-600 text-white rounded">Save Result</button>
-      </div>`
-    )
+    .map(p => {
+      const result = results.find(r => r.patientId === p.id);
+
+      if (p.status === "Pending") {
+        return `
+        <div class="border p-2 rounded mb-2 bg-white shadow">
+          <p><strong>${p.name}</strong> | ${p.department} | ${p.test}</p>
+          <input type="text" id="result-${p.id}" placeholder="Enter Result" class="border p-1 rounded w-full mt-2">
+          <button onclick="saveResult(${p.id})" class="mt-2 px-3 py-1 bg-green-600 text-white rounded">Save Result</button>
+        </div>`;
+      } else {
+        return `
+        <div class="border p-2 rounded mb-2 bg-white shadow">
+          <p><strong>${p.name}</strong> | ${p.department} | ${p.test}</p>
+          <p class="text-green-700 font-semibold">Result: ${result?.result || "N/A"}</p>
+          <button onclick="printReport(${p.id})" class="mt-2 px-3 py-1 bg-blue-600 text-white rounded">Print Report</button>
+          <button onclick="downloadReport(${p.id})" class="mt-2 px-3 py-1 bg-gray-700 text-white rounded">Download PDF</button>
+        </div>`;
+      }
+    })
     .join("");
 }
 
@@ -122,6 +127,8 @@ function renderAdmin() {
   const results = loadData(RESULTS_KEY);
   const container = document.getElementById("adminOutput");
 
+  if (!container) return;
+
   container.innerHTML = patients
     .map(p => {
       const result = results.find(r => r.patientId === p.id);
@@ -145,6 +152,26 @@ function resetData() {
     renderAdmin();
     alert("All data cleared ❌");
   }
+}
+
+// ✅ Print Report
+function printReport(patientId) {
+  const patients = loadData(PATIENTS_KEY);
+  const results = loadData(RESULTS_KEY);
+  const patient = patients.find(p => p.id === patientId);
+  const result = results.find(r => r.patientId === patientId)?.result || "N/A";
+
+  generateReport(patient, result);
+}
+
+// ✅ Download Report
+function downloadReport(patientId) {
+  const patients = loadData(PATIENTS_KEY);
+  const results = loadData(RESULTS_KEY);
+  const patient = patients.find(p => p.id === patientId);
+  const result = results.find(r => r.patientId === patientId)?.result || "N/A";
+
+  window.downloadReport(patient, result);
 }
 
 // ✅ Initial Render
