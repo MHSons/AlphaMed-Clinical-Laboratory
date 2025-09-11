@@ -64,7 +64,7 @@ function renderReception() {
     .join("");
 }
 
-// ✅ Render Technician Panel (now includes Report buttons)
+// ✅ Render Technician Panel
 function renderTechnician() {
   const patients = loadData(PATIENTS_KEY);
   const results = loadData(RESULTS_KEY);
@@ -121,7 +121,7 @@ function saveResult(patientId) {
   alert("Result saved ✅");
 }
 
-// ✅ Render Admin Panel
+// ✅ Render Admin Panel (Enhanced)
 function renderAdmin() {
   const patients = loadData(PATIENTS_KEY);
   const results = loadData(RESULTS_KEY);
@@ -137,6 +137,15 @@ function renderAdmin() {
           <strong>${p.name}</strong> (${p.department} - ${p.test}) <br>
           Status: ${p.status} <br>
           ${result ? `Result: <span class="font-semibold">${result.result}</span> (on ${result.date})` : ""}
+          ${
+            result
+              ? `
+            <div class="mt-2">
+              <button onclick="printReport(${p.id})" class="px-3 py-1 bg-blue-600 text-white rounded">Print Report</button>
+              <button onclick="downloadReport(${p.id})" class="px-3 py-1 bg-gray-700 text-white rounded">Download PDF</button>
+            </div>`
+              : ""
+          }
         </div>`;
     })
     .join("");
