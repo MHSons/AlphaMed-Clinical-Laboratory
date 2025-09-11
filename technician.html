@@ -2,15 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Technician - Alpha-Med Lab</title>
+  <title>Technician Panel - Alpha-Med Lab</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- ✅ Script order -->
   <script defer src="test-data.js"></script>
   <script defer src="storage.js"></script>
   <script defer src="script.js"></script>
   <script defer src="technician.js"></script>
+
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background:#f4f4f9; margin:0; padding:20px; }
+    .container {
+      max-width: 1100px; margin:auto; background:white;
+      padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.2);
+    }
+    h2 { margin-bottom: 20px; }
+    table { width:100%; border-collapse: collapse; margin-top:15px; }
+    th, td { border:1px solid #ccc; padding:8px; text-align:left; }
+    th { background:#28a745; color:white; }
+    tr:nth-child(even) { background:#f9f9f9; }
+    input[type=text] { width:100%; padding:6px; border:1px solid #ccc; border-radius:4px; }
+    button { padding:8px 15px; margin:5px; border:none; border-radius:5px; cursor:pointer; }
+    .btn-save { background:#28a745; color:white; }
+    .btn-logout { background:#dc3545; color:white; }
+  </style>
 </head>
-<body>
-  <!-- existing technician content unchanged -->
-  <!-- ... -->
+<body onload="checkLogin('technician')">
+  <div class="container">
+    <h2>Technician Panel - Alpha-Med Lab</h2>
+    <button class="btn-logout" onclick="logoutUser()">Logout</button>
+
+    <hr />
+
+    <h3>Patient List</h3>
+    <input id="searchTech" placeholder="Search patient..." style="width:100%; padding:8px;" />
+
+    <table id="techPatientTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Dept</th>
+          <th>Tests</th>
+          <th>Enter Results</th>
+        </tr>
+      </thead>
+      <tbody id="techPatientList"></tbody>
+    </table>
+  </div>
 </body>
 </html>
