@@ -1,241 +1,199 @@
-// Utility function to generate unique IDs
-function generateId(prefix = "TEST") {
-  return prefix + "_" + Math.random().toString(36).substr(2, 9);
+// test-data part 1 (English only): Hematology, Biochemistry, Serology, Microbiology, Urinalysis
+// Each module exports an array of test objects. Use these in your /data folder and import/merge in a top-level test-data.js
+
+// hematology.js
+export const hematology = [
+  {
+    id: "HEM_CBC",
+    name: "Complete Blood Count (CBC)",
+    department: "Hematology",
+    parameters: [
+      { parameter: "Hemoglobin", unit: "g/dL", range: "Male: 13.5-17.5; Female: 12.0-15.5" },
+      { parameter: "WBC", unit: "x10^9/L", range: "4.0-11.0" },
+      { parameter: "Platelets", unit: "x10^9/L", range: "150-400" },
+      { parameter: "RBC", unit: "x10^12/L", range: "4.2-5.9" },
+      { parameter: "Hematocrit", unit: "%", range: "40-50" }
+    ]
+  },
+  {
+    id: "HEM_ESR",
+    name: "Erythrocyte Sedimentation Rate (ESR)",
+    department: "Hematology",
+    parameters: [ { parameter: "ESR (Westergren)", unit: "mm/hr", range: "Male: 0-15; Female: 0-20" } ]
+  },
+  {
+    id: "HEM_PERF",
+    name: "Peripheral Blood Film",
+    department: "Hematology",
+    parameters: [ { parameter: "Morphology Report", unit: "text", range: "-" } ]
+  },
+  {
+    id: "HEM_RETIC",
+    name: "Reticulocyte Count",
+    department: "Hematology",
+    parameters: [ { parameter: "Reticulocyte %", unit: "%", range: "0.5-2.5" } ]
+  },
+  {
+    id: "HEM_BLOOD_GROUP",
+    name: "Blood Grouping & Rh Typing",
+    department: "Hematology",
+    parameters: [ { parameter: "ABO Group", unit: "-", range: "A/B/AB/O" }, { parameter: "Rh Factor", unit: "-", range: "Positive/Negative" } ]
+  },
+  {
+    id: "HEM_PT",
+    name: "Prothrombin Time (PT)",
+    department: "Hematology",
+    parameters: [ { parameter: "PT", unit: "seconds", range: "11-15" }, { parameter: "INR", unit: "-", range: "0.8-1.2" } ]
+  },
+  {
+    id: "HEM_APTT",
+    name: "Activated Partial Thromboplastin Time (aPTT)",
+    department: "Hematology",
+    parameters: [ { parameter: "aPTT", unit: "seconds", range: "25-40" } ]
+  },
+  {
+    id: "HEM_COOMBS",
+    name: "Direct and Indirect Coombs Test",
+    department: "Hematology",
+    parameters: [ { parameter: "Direct Coombs", unit: "-", range: "Negative" }, { parameter: "Indirect Coombs", unit: "-", range: "Negative" } ]
+  },
+  {
+    id: "HEM_FERRITIN",
+    name: "Serum Ferritin",
+    department: "Hematology",
+    parameters: [ { parameter: "Ferritin", unit: "ng/mL", range: "Male: 24-336; Female: 11-307" } ]
+  },
+  {
+    id: "HEM_B12",
+    name: "Vitamin B12",
+    department: "Hematology",
+    parameters: [ { parameter: "Vitamin B12", unit: "pg/mL", range: "200-900" } ]
+  }
+];
+
+// biochemistry.js
+export const biochemistry = [
+  {
+    id: "BIO_LFT",
+    name: "Liver Function Test (LFT)",
+    department: "Biochemistry",
+    parameters: [
+      { parameter: "Bilirubin - Total", unit: "mg/dL", range: "0.2-1.2" },
+      { parameter: "Bilirubin - Direct", unit: "mg/dL", range: "0.0-0.3" },
+      { parameter: "ALT (SGPT)", unit: "U/L", range: "7-56" },
+      { parameter: "AST (SGOT)", unit: "U/L", range: "5-40" },
+      { parameter: "Alkaline Phosphatase", unit: "U/L", range: "44-147" }
+    ]
+  },
+  {
+    id: "BIO_RFT",
+    name: "Renal Function Test (RFT)",
+    department: "Biochemistry",
+    parameters: [ { parameter: "Urea", unit: "mg/dL", range: "17-43" }, { parameter: "Creatinine", unit: "mg/dL", range: "0.6-1.3" } ]
+  },
+  {
+    id: "BIO_LIPID",
+    name: "Lipid Profile",
+    department: "Biochemistry",
+    parameters: [ { parameter: "Total Cholesterol", unit: "mg/dL", range: "<200" }, { parameter: "HDL", unit: "mg/dL", range: ">40" }, { parameter: "LDL", unit: "mg/dL", range: "<130" }, { parameter: "Triglycerides", unit: "mg/dL", range: "<150" } ]
+  },
+  {
+    id: "BIO_GLUC",
+    name: "Blood Glucose",
+    department: "Biochemistry",
+    parameters: [ { parameter: "Fasting Glucose", unit: "mg/dL", range: "70-100" }, { parameter: "Random Glucose", unit: "mg/dL", range: "<140" } ]
+  },
+  {
+    id: "BIO_UREA",
+    name: "Uric Acid",
+    department: "Biochemistry",
+    parameters: [ { parameter: "Uric Acid", unit: "mg/dL", range: "3.5-7.2" } ]
+  },
+  {
+    id: "BIO_CPK",
+    name: "CPK (Creatine Phosphokinase)",
+    department: "Biochemistry",
+    parameters: [ { parameter: "CPK", unit: "U/L", range: "26-192" } ]
+  },
+  {
+    id: "BIO_ALB",
+    name: "Serum Albumin",
+    department: "Biochemistry",
+    parameters: [ { parameter: "Albumin", unit: "g/dL", range: "3.5-5.0" } ]
+  },
+  {
+    id: "BIO_TOTAL_PROT",
+    name: "Total Protein",
+    department: "Biochemistry",
+    parameters: [ { parameter: "Total Protein", unit: "g/dL", range: "6.0-8.3" } ]
+  },
+  {
+    id: "BIO_CAL",
+    name: "Calcium (Serum)",
+    department: "Biochemistry",
+    parameters: [ { parameter: "Calcium", unit: "mg/dL", range: "8.5-10.2" } ]
+  },
+  {
+    id: "BIO_PHOS",
+    name: "Phosphate",
+    department: "Biochemistry",
+    parameters: [ { parameter: "Phosphate", unit: "mg/dL", range: "2.5-4.5" } ]
+  }
+];
+
+// serology.js
+export const serology = [
+  { id: "SER_HBSAG", name: "HBsAg (Rapid/ELISA)", department: "Serology", parameters: [ { parameter: "HBsAg", unit: "-", range: "Reactive/Non-Reactive" } ] },
+  { id: "SER_HCV", name: "Anti-HCV (ELISA)", department: "Serology", parameters: [ { parameter: "Anti-HCV", unit: "-", range: "Reactive/Non-Reactive" } ] },
+  { id: "SER_HIV", name: "HIV 1/2 (Rapid/ELISA)", department: "Serology", parameters: [ { parameter: "HIV Ab", unit: "-", range: "Reactive/Non-Reactive" } ] },
+  { id: "SER_DENGUE_NS1", name: "Dengue NS1/IgM/IgG", department: "Serology", parameters: [ { parameter: "NS1", unit: "-", range: "Positive/Negative" }, { parameter: "IgM", unit: "-", range: "Positive/Negative" } ] },
+  { id: "SER_WIDAL", name: "Widal Test", department: "Serology", parameters: [ { parameter: "O", unit: "Titre", range: "<1:80" }, { parameter: "H", unit: "Titre", range: "<1:80" } ] },
+  { id: "SER_RPR", name: "VDRL / RPR", department: "Serology", parameters: [ { parameter: "RPR/VDRL", unit: "-", range: "Non-Reactive" } ] },
+  { id: "SER_CRP", name: "CRP (C-Reactive Protein)", department: "Serology", parameters: [ { parameter: "CRP", unit: "mg/L", range: "<5" } ] },
+  { id: "SER_RA", name: "Rheumatoid Factor (RF)", department: "Serology", parameters: [ { parameter: "RF", unit: "IU/mL", range: "<14" } ] },
+  { id: "SER_ASO", name: "ASO Titre", department: "Serology", parameters: [ { parameter: "ASO", unit: "IU/mL", range: "<200" } ] },
+  { id: "SER_TOXO", name: "Toxoplasma IgG/IgM", department: "Serology", parameters: [ { parameter: "IgG", unit: "-", range: "Positive/Negative" }, { parameter: "IgM", unit: "-", range: "Positive/Negative" } ] }
+];
+
+// microbiology.js
+export const microbiology = [
+  { id: "MIC_URINE_CS", name: "Urine Culture & Sensitivity", department: "Microbiology", parameters: [ { parameter: "Organism", unit: "-", range: "-" }, { parameter: "CFU/mL", unit: "CFU/mL", range: "<10^5" }, { parameter: "Antibiogram", unit: "-", range: "Sensitive/Resistant" } ] },
+  { id: "MIC_BLOOD_CS", name: "Blood Culture", department: "Microbiology", parameters: [ { parameter: "Organism", unit: "-", range: "-" }, { parameter: "Sensitivity", unit: "-", range: "Sensitive/Resistant" } ] },
+  { id: "MIC_SPUTUM_CS", name: "Sputum Culture", department: "Microbiology", parameters: [ { parameter: "Organism", unit: "-", range: "-" } ] },
+  { id: "MIC_STOOL_CS", name: "Stool Culture", department: "Microbiology", parameters: [ { parameter: "Organism", unit: "-", range: "-" } ] },
+  { id: "MIC_SWAB_CS", name: "Throat/Nasal Swab Culture", department: "Microbiology", parameters: [ { parameter: "Organism", unit: "-", range: "-" } ] },
+  { id: "MIC_AFB", name: "AFB Smear / TB Testing", department: "Microbiology", parameters: [ { parameter: "AFB Smear", unit: "-", range: "Positive/Negative" } ] },
+  { id: "MIC_FUNGAL", name: "Fungal Culture", department: "Microbiology", parameters: [ { parameter: "Organism", unit: "-", range: "-" } ] },
+  { id: "MIC_ANTIBIOGRAM", name: "Antibiotic Sensitivity Test", department: "Microbiology", parameters: [ { parameter: "Antibiotic Panel", unit: "-", range: "Sensitive/Resistant" } ] },
+  { id: "MIC_VAGINAL", name: "Vaginal Swab Culture", department: "Microbiology", parameters: [ { parameter: "Organism", unit: "-", range: "-" } ] },
+  { id: "MIC_MALARIA", name: "Malaria Parasite Smear", department: "Microbiology", parameters: [ { parameter: "MP Smear", unit: "-", range: "Positive/Negative" } ] }
+];
+
+// urinalysis.js
+export const urinalysis = [
+  { id: "URR_ROUTINE", name: "Routine Urine Examination", department: "Urinalysis", parameters: [ { parameter: "Appearance", unit: "-", range: "Clear" }, { parameter: "Color", unit: "-", range: "Yellow" }, { parameter: "pH", unit: "", range: "4.5-8.0" }, { parameter: "Specific Gravity", unit: "", range: "1.005-1.030" } ] },
+  { id: "URR_PROTEIN", name: "Urine Protein (Dipstick)", department: "Urinalysis", parameters: [ { parameter: "Protein", unit: "mg/dL", range: "Negative" } ] },
+  { id: "URR_GLUCOSE", name: "Urine Glucose", department: "Urinalysis", parameters: [ { parameter: "Glucose", unit: "mg/dL", range: "Negative" } ] },
+  { id: "URR_MICRO", name: "Urine Microscopy", department: "Urinalysis", parameters: [ { parameter: "RBC", unit: "/HPF", range: "0-3" }, { parameter: "WBC", unit: "/HPF", range: "0-5" }, { parameter: "Epithelial Cells", unit: "/HPF", range: "0-5" } ] },
+  { id: "URR_KETONES", name: "Urine Ketones", department: "Urinalysis", parameters: [ { parameter: "Ketones", unit: "mg/dL", range: "Negative" } ] },
+  { id: "URR_NITRITE", name: "Urine Nitrite", department: "Urinalysis", parameters: [ { parameter: "Nitrite", unit: "-", range: "Negative" } ] },
+  { id: "URR_LEUK", name: "Leukocyte Esterase", department: "Urinalysis", parameters: [ { parameter: "Leukocyte Esterase", unit: "-", range: "Negative" } ] },
+  { id: "URR_BILIRUBIN", name: "Urine Bilirubin", department: "Urinalysis", parameters: [ { parameter: "Bilirubin", unit: "mg/dL", range: "Negative" } ] },
+  { id: "URR_UROBILINOGEN", name: "Urobilinogen", department: "Urinalysis", parameters: [ { parameter: "Urobilinogen", unit: "mg/dL", range: "0.1-1.0" } ] },
+  { id: "URR_OCCULT", name: "Occult Blood (FOBT)", department: "Urinalysis", parameters: [ { parameter: "Occult Blood", unit: "-", range: "Negative" } ] }
+];
+
+// Aggregator (allTestsPart1)
+export const allTestsPart1 = [
+  ...hematology,
+  ...biochemistry,
+  ...serology,
+  ...microbiology,
+  ...urinalysis
+];
+
+export function getTestByIdPart1(id) {
+  return allTestsPart1.find(t => t.id === id) || null;
 }
 
-// Comprehensive test data for Alpha-Med Clinical Lab
-window.testData = {
-  "Hematology": [
-    { id: generateId(), name: "Complete Blood Count (CBC) - Hemoglobin", parameter: "g/dL", normalRange: "12.0 - 17.5", description: "Measures hemoglobin levels in blood", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/hemoglobin" },
-    { id: generateId(), name: "Complete Blood Count (CBC) - WBC", parameter: "cells/uL", normalRange: "4,000 - 11,000", description: "Counts white blood cells", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/wbc" },
-    { id: generateId(), name: "Complete Blood Count (CBC) - Platelets", parameter: "cells/uL", normalRange: "150,000 - 450,000", description: "Counts platelets for clotting", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/platelets" },
-    { id: generateId(), name: "Erythrocyte Sedimentation Rate (ESR)", parameter: "mm/hr", normalRange: "0 - 20", description: "Measures inflammation rate", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/esr" },
-    { id: generateId(), name: "Peripheral Blood Smear", parameter: "report", normalRange: "Reference", description: "Microscopic blood cell examination", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/peripheral-smear" },
-    { id: generateId(), name: "Reticulocyte Count", parameter: "%", normalRange: "0.5 - 2.5", description: "Measures young red blood cells", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/reticulocyte" },
-    { id: generateId(), name: "Mean Corpuscular Volume (MCV)", parameter: "fL", normalRange: "80 - 100", description: "Average red blood cell size", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/mcv" },
-    { id: generateId(), name: "Mean Corpuscular Hemoglobin (MCH)", parameter: "pg", normalRange: "27 - 33", description: "Hemoglobin content in RBCs", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/mch" },
-    { id: generateId(), name: "Mean Corpuscular Hemoglobin Concentration (MCHC)", parameter: "g/dL", normalRange: "32 - 36", description: "Hemoglobin concentration in RBCs", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/mchc" },
-    { id: generateId(), name: "Packed Cell Volume (PCV / Hematocrit)", parameter: "%", normalRange: "36 - 50", description: "Volume of red blood cells", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/pcv" },
-    { id: generateId(), name: "Bleeding Time", parameter: "minutes", normalRange: "2 - 7", description: "Assesses platelet function", sampleType: "Blood", preparation: "Avoid aspirin", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/bleeding-time" },
-    { id: generateId(), name: "Clotting Time", parameter: "minutes", normalRange: "6 - 10", description: "Measures blood clotting time", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/clotting-time" },
-    { id: generateId(), name: "Prothrombin Time (PT)", parameter: "seconds", normalRange: "11 - 15", description: "Evaluates clotting factors", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/pt" },
-    { id: generateId(), name: "INR", parameter: "", normalRange: "0.8 - 1.2", description: "Standardized PT for anticoagulation", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/inr" },
-    { id: generateId(), name: "Activated Partial Thromboplastin Time (aPTT)", parameter: "seconds", normalRange: "25 - 40", description: "Assesses intrinsic clotting pathway", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/aptt" },
-    { id: generateId(), name: "D-dimer", parameter: "ng/mL", normalRange: "< 500", description: "Detects blood clot breakdown", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/d-dimer" },
-    { id: generateId(), name: "Fibrinogen", parameter: "mg/dL", normalRange: "200 - 400", description: "Measures clotting protein", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/fibrinogen" },
-    { id: generateId(), name: "Hemoglobin A1c (HbA1c)", parameter: "%", normalRange: "4.0 - 5.6", description: "Monitors long-term glucose control", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/hba1c" },
-    { id: generateId(), name: "ESR (Wintrobe method)", parameter: "mm/hr", normalRange: "0 - 20", description: "Alternative inflammation test", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/esr-wintrobe" },
-    { id: generateId(), name: "Bone Marrow Examination", parameter: "report", normalRange: "Reference", description: "Analyzes bone marrow cells", sampleType: "Bone Marrow", preparation: "Physician consultation", turnaroundTime: "72 hours", qrCodeLink: "https://alpha-med.com/tests/bone-marrow" }
-  ],
-  "Biochemistry": [
-    { id: generateId(), name: "Blood Glucose (Fasting)", parameter: "mg/dL", normalRange: "70 - 100", description: "Measures fasting blood sugar", sampleType: "Blood", preparation: "8-12 hour fasting", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/glucose-fasting" },
-    { id: generateId(), name: "Blood Glucose (Random)", parameter: "mg/dL", normalRange: "< 140", description: "Measures random blood sugar", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/glucose-random" },
-    { id: generateId(), name: "HbA1c", parameter: "%", normalRange: "4.0 - 5.6", description: "Monitors long-term glucose control", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/hba1c-biochem" },
-    { id: generateId(), name: "Serum Urea", parameter: "mg/dL", normalRange: "7 - 20", description: "Assesses kidney function", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urea" },
-    { id: generateId(), name: "Serum Creatinine", parameter: "mg/dL", normalRange: "0.6 - 1.3", description: "Evaluates kidney function", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/creatinine" },
-    { id: generateId(), name: "Urea/Creatinine Ratio", parameter: "", normalRange: "Reference", description: "Ratio for kidney assessment", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urea-creatinine-ratio" },
-    { id: generateId(), name: "Serum Sodium (Na+)", parameter: "mmol/L", normalRange: "135 - 145", description: "Measures sodium levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/sodium" },
-    { id: generateId(), name: "Serum Potassium (K+)", parameter: "mmol/L", normalRange: "3.5 - 5.1", description: "Measures potassium levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/potassium" },
-    { id: generateId(), name: "Serum Chloride (Cl-)", parameter: "mmol/L", normalRange: "98 - 107", description: "Measures chloride levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/chloride" },
-    { id: generateId(), name: "Serum Bicarbonate (HCO3-)", parameter: "mmol/L", normalRange: "22 - 28", description: "Measures acid-base balance", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/bicarbonate" },
-    { id: generateId(), name: "Liver Function Test (ALT/SGPT)", parameter: "IU/L", normalRange: "7 - 56", description: "Assesses liver damage", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/alt" },
-    { id: generateId(), name: "Liver Function Test (AST/SGOT)", parameter: "IU/L", normalRange: "10 - 40", description: "Evaluates liver function", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/ast" },
-    { id: generateId(), name: "Alkaline Phosphatase (ALP)", parameter: "IU/L", normalRange: "44 - 147", description: "Measures liver/bone health", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/alp" },
-    { id: generateId(), name: "Total Bilirubin", parameter: "mg/dL", normalRange: "0.1 - 1.2", description: "Assesses liver function", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/total-bilirubin" },
-    { id: generateId(), name: "Direct Bilirubin", parameter: "mg/dL", normalRange: "0.0 - 0.3", description: "Measures conjugated bilirubin", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/direct-bilirubin" },
-    { id: generateId(), name: "Total Protein", parameter: "g/dL", normalRange: "6.0 - 8.3", description: "Measures total protein levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/total-protein" },
-    { id: generateId(), name: "Albumin", parameter: "g/dL", normalRange: "3.5 - 5.0", description: "Measures albumin in blood", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/albumin" },
-    { id: generateId(), name: "Serum Calcium (Ca++)", parameter: "mg/dL", normalRange: "8.6 - 10.2", description: "Measures calcium levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/calcium" },
-    { id: generateId(), name: "Serum Phosphorus", parameter: "mg/dL", normalRange: "2.5 - 4.5", description: "Measures phosphorus levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/phosphorus" },
-    { id: generateId(), name: "Lipid Profile - Total Cholesterol", parameter: "mg/dL", normalRange: "< 200", description: "Measures cholesterol levels", sampleType: "Blood", preparation: "12-hour fasting", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/cholesterol" }
-  ],
-  "Serology": [
-    { id: generateId(), name: "Hepatitis B Surface Antigen (HBsAg)", parameter: "qualitative", normalRange: "Negative", description: "Detects Hepatitis B infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/hbsag" },
-    { id: generateId(), name: "Hepatitis B Core Antibody (Anti-HBc)", parameter: "qualitative", normalRange: "Negative/Positive", description: "Indicates past/current HBV infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/anti-hbc" },
-    { id: generateId(), name: "Hepatitis C Antibody (Anti-HCV)", parameter: "qualitative", normalRange: "Negative", description: "Detects Hepatitis C infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/anti-hcv" },
-    { id: generateId(), name: "HIV 1/2 Antibody", parameter: "qualitative", normalRange: "Negative", description: "Screens for HIV infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/hiv" },
-    { id: generateId(), name: "VDRL (Syphilis)", parameter: "qualitative", normalRange: "Non-reactive", description: "Screens for syphilis", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/vdrl" },
-    { id: generateId(), name: "Rubella IgM/IgG", parameter: "qualitative", normalRange: "Negative/Positive", description: "Detects rubella infection/immunity", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/rubella" },
-    { id: generateId(), name: "Dengue NS1", parameter: "qualitative", normalRange: "Negative", description: "Detects early dengue infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/dengue-ns1" },
-    { id: generateId(), name: "Dengue IgM/IgG", parameter: "qualitative", normalRange: "Negative/Positive", description: "Detects dengue infection/immunity", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/dengue-igm-igg" },
-    { id: generateId(), name: "Typhoid (Widal)", parameter: "titer", normalRange: "<1:80", description: "Screens for typhoid fever", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/widal" },
-    { id: generateId(), name: "TORCH Panel (screen)", parameter: "report", normalRange: "Reference", description: "Screens for congenital infections", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/torch" },
-    { id: generateId(), name: "C-Reactive Protein (CRP)", parameter: "mg/L", normalRange: "< 5", description: "Measures inflammation", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/crp" },
-    { id: generateId(), name: "ASO (Antistreptolysin O)", parameter: "IU/mL", normalRange: "< 200", description: "Detects streptococcal infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/aso" },
-    { id: generateId(), name: "Rheumatoid Factor (RF)", parameter: "IU/mL", normalRange: "< 14", description: "Screens for rheumatoid arthritis", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/rf" },
-    { id: generateId(), name: "Antinuclear Antibody (ANA)", parameter: "qualitative", normalRange: "Negative/Positive", description: "Screens for autoimmune disorders", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/ana" },
-    { id: generateId(), name: "Brucella IgM/IgG", parameter: "qualitative", normalRange: "Negative/Positive", description: "Detects brucellosis", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/brucella" },
-    { id: generateId(), name: "Malaria Antigen", parameter: "qualitative", normalRange: "Negative", description: "Detects malaria infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/malaria-antigen" },
-    { id: generateId(), name: "Leptospira Serology", parameter: "qualitative", normalRange: "Negative", description: "Detects leptospirosis", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/leptospira" },
-    { id: generateId(), name: "Chikungunya IgM/IgG", parameter: "qualitative", normalRange: "Negative/Positive", description: "Detects chikungunya infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/chikungunya" },
-    { id: generateId(), name: "HTLV 1/2", parameter: "qualitative", normalRange: "Negative", description: "Screens for HTLV infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/htlv" },
-    { id: generateId(), name: "Strongyloides Serology", parameter: "qualitative", normalRange: "Negative", description: "Detects strongyloidiasis", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/strongyloides" }
-  ],
-  "Microbiology": [
-    { id: generateId(), name: "Blood Culture (aerobic)", parameter: "report", normalRange: "Reference", description: "Detects aerobic bacteria in blood", sampleType: "Blood", preparation: "Sterile collection", turnaroundTime: "48-72 hours", qrCodeLink: "https://alpha-med.com/tests/blood-culture-aerobic" },
-    { id: generateId(), name: "Blood Culture (anaerobic)", parameter: "report", normalRange: "Reference", description: "Detects anaerobic bacteria in blood", sampleType: "Blood", preparation: "Sterile collection", turnaroundTime: "48-72 hours", qrCodeLink: "https://alpha-med.com/tests/blood-culture-anaerobic" },
-    { id: generateId(), name: "Urine Culture & Sensitivity", parameter: "report", normalRange: "Reference", description: "Identifies urinary tract infections", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/urine-culture" },
-    { id: generateId(), name: "Sputum Culture & Sensitivity", parameter: "report", normalRange: "Reference", description: "Detects respiratory infections", sampleType: "Sputum", preparation: "Morning sputum", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/sputum-culture" },
-    { id: generateId(), name: "Stool Culture", parameter: "report", normalRange: "Reference", description: "Detects gastrointestinal pathogens", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/stool-culture" },
-    { id: generateId(), name: "Throat Swab Culture", parameter: "report", normalRange: "Reference", description: "Detects throat infections", sampleType: "Throat Swab", preparation: "No antibiotics prior", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/throat-culture" },
-    { id: generateId(), name: "Wound Swab Culture", parameter: "report", normalRange: "Reference", description: "Identifies wound infections", sampleType: "Wound Swab", preparation: "Sterile collection", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/wound-culture" },
-    { id: generateId(), name: "CSF Culture", parameter: "report", normalRange: "Reference", description: "Detects meningitis pathogens", sampleType: "Cerebrospinal Fluid", preparation: "Physician collection", turnaroundTime: "72 hours", qrCodeLink: "https://alpha-med.com/tests/csf-culture" },
-    { id: generateId(), name: "Pus Culture", parameter: "report", normalRange: "Reference", description: "Identifies pus infections", sampleType: "Pus", preparation: "Sterile collection", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/pus-culture" },
-    { id: generateId(), name: "H. pylori Antigen (stool)", parameter: "qualitative", normalRange: "Negative", description: "Detects H. pylori infection", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/hpylori-antigen" },
-    { id: generateId(), name: "Malaria Smear", parameter: "parasites/uL", normalRange: "Negative", description: "Detects malaria parasites", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/malaria-smear" },
-    { id: generateId(), name: "GeneXpert MTB/RIF (TB)", parameter: "qualitative", normalRange: "Negative", description: "Detects tuberculosis and rifampicin resistance", sampleType: "Sputum", preparation: "Morning sputum", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/genexpert-tb" },
-    { id: generateId(), name: "Mycobacterial Culture", parameter: "report", normalRange: "Reference", description: "Detects mycobacterial infections", sampleType: "Sputum", preparation: "Morning sputum", turnaroundTime: "6-8 weeks", qrCodeLink: "https://alpha-med.com/tests/mycobacterial-culture" },
-    { id: generateId(), name: "Candida / Fungal Culture", parameter: "report", normalRange: "Reference", description: "Detects fungal infections", sampleType: "Swab/Sputum", preparation: "Sterile collection", turnaroundTime: "48-72 hours", qrCodeLink: "https://alpha-med.com/tests/fungal-culture" },
-    { id: generateId(), name: "Antibiotic Sensitivity Panel", parameter: "report", normalRange: "Reference", description: "Determines antibiotic effectiveness", sampleType: "Culture Isolate", preparation: "Lab preparation", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/antibiotic-sensitivity" },
-    { id: generateId(), name: "Gonococcal/Chlamydia PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects STD pathogens", sampleType: "Swab/Urine", preparation: "No antibiotics prior", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/gonococcal-pcr" },
-    { id: generateId(), name: "HSV PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects herpes simplex virus", sampleType: "Swab", preparation: "Sterile collection", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/hsv-pcr" },
-    { id: generateId(), name: "Norovirus PCR (stool)", parameter: "qualitative", normalRange: "Negative", description: "Detects norovirus in stool", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/norovirus-pcr" },
-    { id: generateId(), name: "PCR Respiratory Panel", parameter: "report", normalRange: "Reference", description: "Detects respiratory pathogens", sampleType: "Nasopharyngeal Swab", preparation: "Sterile collection", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/respiratory-pcr" }
-  ],
-  "Urine": [
-    { id: generateId(), name: "Urine Routine Examination (R/E)", parameter: "report", normalRange: "Reference", description: "Analyzes urine physical/chemical properties", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-re" },
-    { id: generateId(), name: "Urine Microscopy", parameter: "cells/uL", normalRange: "0 - 5", description: "Microscopic urine analysis", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-microscopy" },
-    { id: generateId(), name: "Urine Culture & Sensitivity", parameter: "report", normalRange: "Reference", description: "Detects urinary tract infections", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/urine-culture" },
-    { id: generateId(), name: "Urine pH", parameter: "pH", normalRange: "4.5 - 8.0", description: "Measures urine acidity", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-ph" },
-    { id: generateId(), name: "Urine Specific Gravity", parameter: "", normalRange: "1.005 - 1.030", description: "Measures urine concentration", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-specific-gravity" },
-    { id: generateId(), name: "Urine Protein (Dipstick)", parameter: "mg/dL", normalRange: "Negative", description: "Detects protein in urine", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-protein" },
-    { id: generateId(), name: "Urine Microalbumin", parameter: "mg/day", normalRange: "< 30", description: "Detects early kidney damage", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-microalbumin" },
-    { id: generateId(), name: "Urine Creatinine", parameter: "mg/dL", normalRange: "Reference", description: "Measures creatinine in urine", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-creatinine" },
-    { id: generateId(), name: "Albumin/Creatinine Ratio (ACR)", parameter: "mg/g", normalRange: "< 30", description: "Assesses kidney function", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/acr" },
-    { id: generateId(), name: "Urine Sugar (Glucosuria)", parameter: "mg/dL", normalRange: "Negative", description: "Detects glucose in urine", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-sugar" },
-    { id: generateId(), name: "Urine Ketones", parameter: "mg/dL", normalRange: "Negative", description: "Detects ketones in urine", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-ketones" },
-    { id: generateId(), name: "Pregnancy Test (Urine hCG)", parameter: "qualitative", normalRange: "Negative/Positive", description: "Detects pregnancy", sampleType: "Urine", preparation: "First morning urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/pregnancy-test" },
-    { id: generateId(), name: "Urine Cytology", parameter: "report", normalRange: "Reference", description: "Detects abnormal cells in urine", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/urine-cytology" },
-    { id: generateId(), name: "24-hour Urine Protein", parameter: "mg/day", normalRange: "< 150", description: "Measures daily protein excretion", sampleType: "24-hour Urine", preparation: "24-hour collection", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/24hr-urine-protein" },
-    { id: generateId(), name: "Urine Calcium", parameter: "mg/day", normalRange: "100 - 300", description: "Measures calcium in urine", sampleType: "24-hour Urine", preparation: "24-hour collection", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/urine-calcium" },
-    { id: generateId(), name: "Urine Oxalate", parameter: "mg/day", normalRange: "10 - 40", description: "Measures oxalate in urine", sampleType: "24-hour Urine", preparation: "24-hour collection", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/urine-oxalate" },
-    { id: generateId(), name: "Urine Sodium", parameter: "mmol/L", normalRange: "Reference", description: "Measures sodium in urine", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-sodium" },
-    { id: generateId(), name: "Urine Potassium", parameter: "mmol/L", normalRange: "Reference", description: "Measures potassium in urine", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-potassium" },
-    { id: generateId(), name: "Urine Chloride", parameter: "mmol/L", normalRange: "Reference", description: "Measures chloride in urine", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-chloride" },
-    { id: generateId(), name: "Urine Urobilinogen", parameter: "mg/dL", normalRange: "0.2 - 1.0", description: "Measures urobilinogen in urine", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/urine-urobilinogen" }
-  ],
-  "Stool": [
-    { id: generateId(), name: "Stool Routine Examination (R/E)", parameter: "report", normalRange: "Reference", description: "Analyzes stool properties", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/stool-re" },
-    { id: generateId(), name: "Stool Microscopy (Ova & Parasites)", parameter: "report", normalRange: "Reference", description: "Detects parasites in stool", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/stool-ova-parasites" },
-    { id: generateId(), name: "Fecal Occult Blood Test (FOBT)", parameter: "ng/mL", normalRange: "Negative", description: "Detects hidden blood in stool", sampleType: "Stool", preparation: "Avoid red meat", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/fobt" },
-    { id: generateId(), name: "Stool Culture & Sensitivity", parameter: "report", normalRange: "Reference", description: "Detects gastrointestinal pathogens", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/stool-culture" },
-    { id: generateId(), name: "Clostridium difficile Toxin", parameter: "qualitative", normalRange: "Negative", description: "Detects C. difficile infection", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/cdiff-toxin" },
-    { id: generateId(), name: "Stool Antigen - Giardia", parameter: "qualitative", normalRange: "Negative", description: "Detects Giardia infection", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/giardia-antigen" },
-    { id: generateId(), name: "Stool Antigen - H. pylori", parameter: "qualitative", normalRange: "Negative", description: "Detects H. pylori infection", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/hpylori-antigen-stool" },
-    { id: generateId(), name: "Stool Macroscopy", parameter: "report", normalRange: "Reference", description: "Visual stool examination", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/stool-macroscopy" },
-    { id: generateId(), name: "Calprotectin (faecal)", parameter: "µg/g", normalRange: "< 50", description: "Measures gut inflammation", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/calprotectin" },
-    { id: generateId(), name: "Stool PCR Panel", parameter: "report", normalRange: "Reference", description: "Detects multiple pathogens", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/stool-pcr" },
-    { id: generateId(), name: "Lactoferrin (fecal)", parameter: "µg/g", normalRange: "< 7.5", description: "Measures gut inflammation", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/lactoferrin" },
-    { id: generateId(), name: "Stool Fat (Qualitative)", parameter: "report", normalRange: "Reference", description: "Detects fat malabsorption", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/stool-fat" },
-    { id: generateId(), name: "Rotavirus Antigen", parameter: "qualitative", normalRange: "Negative", description: "Detects rotavirus infection", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/rotavirus" },
-    { id: generateId(), name: "Enteric Pathogen PCR", parameter: "report", normalRange: "Reference", description: "Detects enteric pathogens", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/enteric-pcr" },
-    { id: generateId(), name: "Stool Giardia Antigen", parameter: "qualitative", normalRange: "Negative", description: "Detects Giardia infection", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/giardia-antigen-stool" },
-    { id: generateId(), name: "Cryptosporidium Antigen", parameter: "qualitative", normalRange: "Negative", description: "Detects Cryptosporidium infection", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/cryptosporidium" },
-    { id: generateId(), name: "Stool Adenovirus", parameter: "qualitative", normalRange: "Negative", description: "Detects adenovirus infection", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/adenovirus-stool" },
-    { id: generateId(), name: "Stool ELISA Pathogens", parameter: "report", normalRange: "Reference", description: "Detects pathogens via ELISA", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/stool-elisa" },
-    { id: generateId(), name: "Helminth Ova Screen", parameter: "report", normalRange: "Reference", description: "Detects parasitic eggs", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/helminth-ova" },
-    { id: generateId(), name: "Stool pH", parameter: "pH", normalRange: "5.5 - 7.5", description: "Measures stool acidity", sampleType: "Stool", preparation: "Fresh sample", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/stool-ph" }
-  ],
-  "Immunology": [
-    { id: generateId(), name: "C-Reactive Protein (CRP)", parameter: "mg/L", normalRange: "< 5", description: "Measures inflammation", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/crp-immuno" },
-    { id: generateId(), name: "Immunoglobulin G (IgG)", parameter: "mg/dL", normalRange: "700 - 1600", description: "Measures IgG levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/igg" },
-    { id: generateId(), name: "Immunoglobulin M (IgM)", parameter: "mg/dL", normalRange: "40 - 230", description: "Measures IgM levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/igm" },
-    { id: generateId(), name: "Immunoglobulin A (IgA)", parameter: "mg/dL", normalRange: "70 - 400", description: "Measures IgA levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/iga" },
-    { id: generateId(), name: "Complement C3", parameter: "mg/dL", normalRange: "90 - 180", description: "Measures complement protein C3", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/c3" },
-    { id: generateId(), name: "Complement C4", parameter: "mg/dL", normalRange: "10 - 40", description: "Measures complement protein C4", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/c4" },
-    { id: generateId(), name: "ANA (Antinuclear Antibody)", parameter: "qualitative", normalRange: "Negative", description: "Screens for autoimmune disorders", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/ana-immuno" },
-    { id: generateId(), name: "Anti-dsDNA", parameter: "IU/mL", normalRange: "< 30", description: "Detects lupus-specific antibodies", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/anti-dsdna" },
-    { id: generateId(), name: "Rheumatoid Factor (RF)", parameter: "IU/mL", normalRange: "< 14", description: "Screens for rheumatoid arthritis", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/rf-immuno" },
-    { id: generateId(), name: "Anti-CCP (Anti-Cyclic Citrullinated Peptide)", parameter: "U/mL", normalRange: "< 20", description: "Diagnoses rheumatoid arthritis", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/anti-ccp" },
-    { id: generateId(), name: "Total IgE", parameter: "IU/mL", normalRange: "< 100", description: "Measures allergic response", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/total-ige" },
-    { id: generateId(), name: "Allergy Specific IgE Panel", parameter: "report", normalRange: "Reference", description: "Identifies specific allergens", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/allergy-ige" },
-    { id: generateId(), name: "ASO (Antistreptolysin O)", parameter: "IU/mL", normalRange: "< 200", description: "Detects streptococcal infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/aso-immuno" },
-    { id: generateId(), name: "Serum Angiotensin Converting Enzyme (ACE)", parameter: "U/L", normalRange: "8 - 52", description: "Diagnoses sarcoidosis", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/ace" },
-    { id: generateId(), name: "QuantiFERON-TB Gold", parameter: "qualitative", normalRange: "Negative", description: "Detects latent TB infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/quantiferon" },
-    { id: generateId(), name: "Celiac Serology - tTG IgA", parameter: "U/mL", normalRange: "< 4", description: "Screens for celiac disease", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/ttg-iga" },
-    { id: generateId(), name: "IgG Subclasses", parameter: "report", normalRange: "Reference", description: "Measures IgG subclass levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/igg-subclasses" },
-    { id: generateId(), name: "Hepatitis B Surface Antibody (Anti-HBs)", parameter: "mIU/mL", normalRange: "> 10", description: "Confirms HBV immunity", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/anti-hbs" },
-    { id: generateId(), name: "Hepatitis B Core IgM", parameter: "qualitative", normalRange: "Negative", description: "Detects acute HBV infection", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/hbc-igm" },
-    { id: generateId(), name: "Anti-Phospholipid Antibodies", parameter: "report", normalRange: "Reference", description: "Detects clotting disorders", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/anti-phospholipid" }
-  ],
-  "Pathology": [
-    { id: generateId(), name: "Histopathology - Biopsy (Skin)", parameter: "report", normalRange: "Reference", description: "Examines skin tissue", sampleType: "Skin Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/skin-biopsy" },
-    { id: generateId(), name: "Histopathology - Biopsy (Liver)", parameter: "report", normalRange: "Reference", description: "Examines liver tissue", sampleType: "Liver Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/liver-biopsy" },
-    { id: generateId(), name: "Histopathology - Biopsy (Colon)", parameter: "report", normalRange: "Reference", description: "Examines colon tissue", sampleType: "Colon Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/colon-biopsy" },
-    { id: generateId(), name: "Histopathology - Biopsy (Prostate)", parameter: "report", normalRange: "Reference", description: "Examines prostate tissue", sampleType: "Prostate Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/prostate-biopsy" },
-    { id: generateId(), name: "Immunohistochemistry Panel", parameter: "report", normalRange: "Reference", description: "Identifies specific proteins in tissue", sampleType: "Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/immunohistochemistry" },
-    { id: generateId(), name: "FNAC Cytology (Fine Needle Aspiration)", parameter: "report", normalRange: "Reference", description: "Examines cells from masses", sampleType: "Aspirate", preparation: "Physician collection", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/fnac" },
-    { id: generateId(), name: "Bone Marrow Biopsy Report", parameter: "report", normalRange: "Reference", description: "Analyzes bone marrow tissue", sampleType: "Bone Marrow", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/bone-marrow-biopsy" },
-    { id: generateId(), name: "Frozen Section", parameter: "report", normalRange: "Reference", description: "Rapid tissue analysis during surgery", sampleType: "Tissue", preparation: "Physician collection", turnaroundTime: "1 hour", qrCodeLink: "https://alpha-med.com/tests/frozen-section" },
-    { id: generateId(), name: "Tumor Margin Assessment", parameter: "report", normalRange: "Reference", description: "Checks tumor boundaries", sampleType: "Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/tumor-margin" },
-    { id: generateId(), name: "Peritoneal Fluid Cytology", parameter: "report", normalRange: "Reference", description: "Examines peritoneal fluid cells", sampleType: "Peritoneal Fluid", preparation: "Physician collection", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/peritoneal-cytology" },
-    { id: generateId(), name: "Pleural Fluid Cytology", parameter: "report", normalRange: "Reference", description: "Examines pleural fluid cells", sampleType: "Pleural Fluid", preparation: "Physician collection", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/pleural-cytology" },
-    { id: generateId(), name: "Surgical Pathology Report", parameter: "report", normalRange: "Reference", description: "Detailed tissue analysis", sampleType: "Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/surgical-pathology" },
-    { id: generateId(), name: "Special Stains (PAS/ZN)", parameter: "report", normalRange: "Reference", description: "Specialized tissue staining", sampleType: "Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/special-stains" },
-    { id: generateId(), name: "Molecular Pathology Panel", parameter: "report", normalRange: "Reference", description: "Genetic analysis of tissue", sampleType: "Tissue", preparation: "Physician collection", turnaroundTime: "7-10 days", qrCodeLink: "https://alpha-med.com/tests/molecular-pathology" },
-    { id: generateId(), name: "Prostate Biopsy Gleason Score", parameter: "report", normalRange: "Reference", description: "Grades prostate cancer", sampleType: "Prostate Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/gleason-score" },
-    { id: generateId(), name: "Lymph Node Biopsy Report", parameter: "report", normalRange: "Reference", description: "Examines lymph node tissue", sampleType: "Lymph Node Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/lymph-node-biopsy" },
-    { id: generateId(), name: "Skin Punch Biopsy", parameter: "report", normalRange: "Reference", description: "Examines skin lesions", sampleType: "Skin Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/skin-punch-biopsy" },
-    { id: generateId(), name: "Renal Biopsy Report", parameter: "report", normalRange: "Reference", description: "Examines kidney tissue", sampleType: "Renal Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/renal-biopsy" },
-    { id: generateId(), name: "Histochemical Staining", parameter: "report", normalRange: "Reference", description: "Chemical-based tissue staining", sampleType: "Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/histochemical-staining" },
-    { id: generateId(), name: "Pathology Consultation", parameter: "report", normalRange: "Reference", description: "Expert pathology review", sampleType: "Tissue", preparation: "Physician collection", turnaroundTime: "5-7 days", qrCodeLink: "https://alpha-med.com/tests/pathology-consultation" }
-  ],
-  "Toxicology": [
-    { id: generateId(), name: "Drug Screen (Urine)", parameter: "qualitative", normalRange: "Negative", description: "Detects common drugs of abuse", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/drug-screen" },
-    { id: generateId(), name: "Alcohol (Ethanol) Level", parameter: "mg/dL", normalRange: "< 10", description: "Measures blood alcohol concentration", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/alcohol-level" },
-    { id: generateId(), name: "Opiates Screen", parameter: "qualitative", normalRange: "Negative", description: "Detects opiate use", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/opiates-screen" },
-    { id: generateId(), name: "Benzodiazepines Screen", parameter: "qualitative", normalRange: "Negative", description: "Detects benzodiazepine use", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/benzodiazepines" },
-    { id: generateId(), name: "Cannabinoids (THC) Screen", parameter: "qualitative", normalRange: "Negative", description: "Detects marijuana use", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/thc-screen" },
-    { id: generateId(), name: "Cocaine Metabolites Screen", parameter: "qualitative", normalRange: "Negative", description: "Detects cocaine use", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/cocaine-screen" },
-    { id: generateId(), name: "Amphetamines Screen", parameter: "qualitative", normalRange: "Negative", description: "Detects amphetamine use", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/amphetamines" },
-    { id: generateId(), name: "Barbiturates Screen", parameter: "qualitative", normalRange: "Negative", description: "Detects barbiturate use", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/barbiturates" },
-    { id: generateId(), name: "Lead Level", parameter: "µg/dL", normalRange: "< 5", description: "Measures lead exposure", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/lead-level" },
-    { id: generateId(), name: "Mercury Level", parameter: "µg/L", normalRange: "< 10", description: "Measures mercury exposure", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/mercury-level" },
-    { id: generateId(), name: "Arsenic Level", parameter: "µg/L", normalRange: "< 50", description: "Measures arsenic exposure", sampleType: "Urine", preparation: "Clean-catch urine", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/arsenic-level" },
-    { id: generateId(), name: "Carbon Monoxide (Carboxyhemoglobin)", parameter: "%", normalRange: "< 2", description: "Measures CO exposure", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/carboxyhemoglobin" },
-    { id: generateId(), name: "Pesticide Screen", parameter: "qualitative", normalRange: "Negative", description: "Detects pesticide exposure", sampleType: "Blood/Urine", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/pesticide-screen" },
-    { id: generateId(), name: "Acetaminophen Level", parameter: "µg/mL", normalRange: "10 - 30", description: "Measures acetaminophen levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/acetaminophen" },
-    { id: generateId(), name: "Salicylate Level", parameter: "mg/dL", normalRange: "< 30", description: "Measures aspirin levels", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/salicylate" },
-    { id: generateId(), name: "Ethylene Glycol Screen", parameter: "qualitative", normalRange: "Negative", description: "Detects antifreeze poisoning", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/ethylene-glycol" },
-    { id: generateId(), name: "Methanol Screen", parameter: "qualitative", normalRange: "Negative", description: "Detects methanol poisoning", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/methanol" },
-    { id: generateId(), name: "Heavy Metal Screen", parameter: "report", normalRange: "Reference", description: "Detects multiple heavy metals", sampleType: "Blood/Urine", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/heavy-metal" },
-    { id: generateId(), name: "Volatile Organic Compounds Screen", parameter: "report", normalRange: "Reference", description: "Detects chemical exposure", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/voc-screen" },
-    { id: generateId(), name: "Therapeutic Drug Monitoring", parameter: "report", normalRange: "Reference", description: "Monitors drug levels", sampleType: "Blood", preparation: "Physician consultation", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/therapeutic-drug" }
-  ],
-  "Molecular Biology": [
-    { id: generateId(), name: "COVID-19 RT-PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects SARS-CoV-2 RNA", sampleType: "Nasopharyngeal Swab", preparation: "Sterile collection", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/covid-pcr" },
-    { id: generateId(), name: "Hepatitis C RNA PCR", parameter: "IU/mL", normalRange: "Negative", description: "Quantifies HCV viral load", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/hcv-pcr" },
-    { id: generateId(), name: "Hepatitis B DNA PCR", parameter: "IU/mL", normalRange: "Negative", description: "Quantifies HBV viral load", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/hbv-pcr" },
-    { id: generateId(), name: "HIV Viral Load PCR", parameter: "copies/mL", normalRange: "Undetectable", description: "Quantifies HIV viral load", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/hiv-pcr" },
-    { id: generateId(), name: "TB PCR (GeneXpert)", parameter: "qualitative", normalRange: "Negative", description: "Detects TB DNA", sampleType: "Sputum", preparation: "Morning sputum", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/tb-pcr" },
-    { id: generateId(), name: "HPV PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects high-risk HPV strains", sampleType: "Cervical Swab", preparation: "Physician collection", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/hpv-pcr" },
-    { id: generateId(), name: "Chlamydia trachomatis PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects Chlamydia infection", sampleType: "Swab/Urine", preparation: "No antibiotics prior", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/chlamydia-pcr" },
-    { id: generateId(), name: "Neisseria gonorrhoeae PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects gonorrhea", sampleType: "Swab/Urine", preparation: "No antibiotics prior", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/gonorrhoeae-pcr" },
-    { id: generateId(), name: "Mycoplasma genitalium PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects Mycoplasma infection", sampleType: "Swab/Urine", preparation: "No antibiotics prior", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/mycoplasma-pcr" },
-    { id: generateId(), name: "Herpes Simplex Virus (HSV) PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects HSV DNA", sampleType: "Swab", preparation: "Sterile collection", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/hsv-pcr-molbio" },
-    { id: generateId(), name: "BRCA1/BRCA2 Gene Testing", parameter: "report", normalRange: "Reference", description: "Screens for breast cancer mutations", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "7-10 days", qrCodeLink: "https://alpha-med.com/tests/brca" },
-    { id: generateId(), name: "Cystic Fibrosis Gene Panel", parameter: "report", normalRange: "Reference", description: "Screens for CF mutations", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "7-10 days", qrCodeLink: "https://alpha-med.com/tests/cystic-fibrosis" },
-    { id: generateId(), name: "KRAS Mutation Analysis", parameter: "report", normalRange: "Reference", description: "Detects KRAS mutations for cancer", sampleType: "Tissue", preparation: "Physician collection", turnaroundTime: "7-10 days", qrCodeLink: "https://alpha-med.com/tests/kras" },
-    { id: generateId(), name: "EGFR Mutation Analysis", parameter: "report", normalRange: "Reference", description: "Detects EGFR mutations for cancer", sampleType: "Tissue", preparation: "Physician collection", turnaroundTime: "7-10 days", qrCodeLink: "https://alpha-med.com/tests/egfr" },
-    { id: generateId(), name: "BCR-ABL PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects leukemia-related mutations", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/bcr-abl" },
-    { id: generateId(), name: "JAK2 Mutation Test", parameter: "qualitative", normalRange: "Negative", description: "Detects myeloproliferative disorders", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/jak2" },
-    { id: generateId(), name: "CMV PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects cytomegalovirus", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/cmv-pcr" },
-    { id: generateId(), name: "EBV PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects Epstein-Barr virus", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/ebv-pcr" },
-    { id: generateId(), name: "Zika Virus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects Zika virus", sampleType: "Blood/Urine", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/zika-pcr" },
-    { id: generateId(), name: "Dengue Virus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects dengue virus", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/dengue-pcr" }
-  ],
-  "Virology": [
-    { id: generateId(), name: "HIV Viral Load", parameter: "copies/mL", normalRange: "Undetectable", description: "Quantifies HIV virus", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/hiv-viral-load" },
-    { id: generateId(), name: "Hepatitis B Viral Load", parameter: "IU/mL", normalRange: "Undetectable", description: "Quantifies HBV virus", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/hbv-viral-load" },
-    { id: generateId(), name: "Hepatitis C Viral Load", parameter: "IU/mL", normalRange: "Undetectable", description: "Quantifies HCV virus", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/hcv-viral-load" },
-    { id: generateId(), name: "CMV Quantitative PCR", parameter: "copies/mL", normalRange: "Undetectable", description: "Quantifies cytomegalovirus", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/cmv-quant-pcr" },
-    { id: generateId(), name: "EBV Quantitative PCR", parameter: "copies/mL", normalRange: "Undetectable", description: "Quantifies Epstein-Barr virus", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/ebv-quant-pcr" },
-    { id: generateId(), name: "HCV Genotyping", parameter: "report", normalRange: "Reference", description: "Identifies HCV genotype", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "72 hours", qrCodeLink: "https://alpha-med.com/tests/hcv-genotyping" },
-    { id: generateId(), name: "HBV Genotyping", parameter: "report", normalRange: "Reference", description: "Identifies HBV genotype", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "72 hours", qrCodeLink: "https://alpha-med.com/tests/hbv-genotyping" },
-    { id: generateId(), name: "Influenza A/B PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects influenza viruses", sampleType: "Nasopharyngeal Swab", preparation: "Sterile collection", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/influenza-pcr" },
-    { id: generateId(), name: "Respiratory Syncytial Virus (RSV) PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects RSV infection", sampleType: "Nasopharyngeal Swab", preparation: "Sterile collection", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/rsv-pcr" },
-    { id: generateId(), name: "Dengue Virus Serotyping", parameter: "report", normalRange: "Reference", description: "Identifies dengue serotypes", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/dengue-serotyping" },
-    { id: generateId(), name: "Zika Virus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects Zika virus", sampleType: "Blood/Urine", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/zika-pcr-virology" },
-    { id: generateId(), name: "Chikungunya Virus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects chikungunya virus", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/chikungunya-pcr" },
-    { id: generateId(), name: "West Nile Virus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects West Nile virus", sampleType: "Blood/CSF", preparation: "Physician collection", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/wnv-pcr" },
-    { id: generateId(), name: "Hantavirus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects hantavirus
+// End of Part 1 (English only).
