@@ -1,61 +1,158 @@
-```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Report - Alpha-Med Clinical Lab</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Patient Test Report — Prime Medical Lab</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="logo.png" />
+  <style>
+    .report-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 40px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+    }
+    .report-header {
+      text-align: center;
+      border-bottom: 3px solid #0078d7;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+    }
+    .report-header img {
+      height: 80px;
+    }
+    .report-header h1 {
+      margin: 10px 0 5px;
+    }
+    .report-header p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+    }
+    .report-section {
+      margin-top: 20px;
+    }
+    .report-section h2 {
+      background: #0078d7;
+      color: #fff;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .report-table td, .report-table th {
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    .report-footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 13px;
+      color: #555;
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+    }
+    @media print {
+      .no-print { display: none; }
+      body { background: white; }
+      .report-container { box-shadow: none; border: none; margin: 0; }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Patient Report - Alpha-Med Clinical Lab</h1>
-  </header>
+  <div class="report-container" id="reportContainer">
+    <div class="report-header">
+      <img src="logo.png" alt="Lab Logo" />
+      <h1>Prime Medical Diagnostic Laboratory</h1>
+      <p>ISO 15189:2022 Certified | Quality Assured Medical Testing | Lahore, Pakistan</p>
+    </div>
 
-  <div class="container report-container">
-    <h2>Patient Report</h2>
-    <div id="reportDetails"></div>
-    <div class="qr">
-      <h3>QR Code for Report</h3>
-      <div id="qrCode"></div>
+    <div class="report-section">
+      <h2>Patient Information</h2>
+      <table class="report-table" id="patientInfo">
+        <tr><th>ID</th><td id="pid"></td></tr>
+        <tr><th>Name</th><td id="pname"></td></tr>
+        <tr><th>Age</th><td id="page"></td></tr>
+        <tr><th>Gender</th><td id="pgender"></td></tr>
+        <tr><th>Contact</th><td id="pcontact"></td></tr>
+        <tr><th>Test Type</th><td id="ptest"></td></tr>
+        <tr><th>Registered On</th><td id="pdate"></td></tr>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <h2>Test Result</h2>
+      <table class="report-table">
+        <tr><th>Result</th></tr>
+        <tr><td id="presult" style="white-space: pre-wrap;"></td></tr>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <h2>Remarks & Technician Info</h2>
+      <table class="report-table">
+        <tr><th>Remarks</th><td id="premarks"></td></tr>
+        <tr><th>Completed At</th><td id="pcompleted"></td></tr>
+        <tr><th>Technician</th><td id="ptech"></td></tr>
+      </table>
+    </div>
+
+    <div class="report-footer">
+      <p>Prime Medical Diagnostic Laboratory — Lahore, Pakistan</p>
+      <p>All rights reserved © <span id="year"></span> | Developed under ISO 15189:2022 standards.</p>
     </div>
   </div>
 
-  <footer>&copy; 2025 Alpha-Med Clinical Lab</footer>
+  <div class="no-print" style="text-align:center; margin:20px;">
+    <button onclick="window.print()" class="btn">Print Report</button>
+    <button onclick="window.location.href='view_reports.html'" class="btn btn-outline">Back</button>
+  </div>
 
-  <script src="https://unpkg.com/qrcode@1.5.1/build/qrcode.min.js"></script>
-  <script src="test-data.js"></script>
-  <script src="qr-generator.js"></script>
+  <!-- JS -->
+  <script src="storage.js"></script>
+  <script src="script.js"></script>
   <script>
-    function loadReport() {
-      const report = JSON.parse(localStorage.getItem("latestReport") || "{}");
-      const detailsDiv = document.getElementById("reportDetails");
-      const qrCodeContainer = document.getElementById("qrCode");
-
-      if (!report.mrn) {
-        detailsDiv.innerHTML = '<div class="error">No report data found</div>';
+    document.addEventListener("DOMContentLoaded", () => {
+      const id = localStorage.getItem("currentReportId");
+      if (!id) {
+        alert("No report selected!");
+        window.location.href = "view_reports.html";
         return;
       }
 
-      const test = Object.values(window.testData).flat().find(t => t.id === report.testId);
-      detailsDiv.innerHTML = `
-        <div class="info-row"><span>MRN:</span> ${report.mrn}</div>
-        <div class="info-row"><span>Name:</span> ${report.name}</div>
-        <div class="info-row"><span>CNIC:</span> ${report.cnic}</div>
-        <div class="info-row"><span>Phone:</span> ${report.phone}</div>
-        <div class="info-row"><span>Department:</span> ${report.department}</div>
-        <div class="info-row"><span>Test:</span> ${test ? test.name : report.testName}</div>
-        <div class="info-row"><span>Normal Range:</span> ${test ? test.normalRange : "N/A"}</div>
-        <div class="info-row"><span>Result:</span> <span style="font-weight: bold;">${report.result}</span></div>
-        <div class="info-row"><span>Date:</span> ${report.date}</div>
-      `;
+      const patient = getPatients().find(p => p.id == id);
+      if (!patient) {
+        alert("Patient record not found!");
+        window.location.href = "view_reports.html";
+        return;
+      }
 
-      const qrData = `MRN: ${report.mrn} | Test: ${test ? test.name : report.testName} | Result: ${report.result}`;
-      generateQRCode(qrData, "qrCode");
-    }
+      document.getElementById("pid").textContent = patient.id;
+      document.getElementById("pname").textContent = patient.name;
+      document.getElementById("page").textContent = patient.age;
+      document.getElementById("pgender").textContent = patient.gender;
+      document.getElementById("pcontact").textContent = patient.contact;
+      document.getElementById("ptest").textContent = patient.testType;
+      document.getElementById("pdate").textContent = patient.registeredAt;
+      document.getElementById("presult").textContent = patient.result?.result || "Result not available.";
+      document.getElementById("premarks").textContent = patient.result?.remarks || "-";
+      document.getElementById("pcompleted").textContent = patient.result?.completedAt || "-";
+      document.getElementById("ptech").textContent = patient.result?.technician || "-";
+      document.getElementById("year").textContent = new Date().getFullYear();
 
-    document.addEventListener("DOMContentLoaded", loadReport);
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("print") === "true") {
+        window.print();
+      }
+    });
   </script>
 </body>
 </html>
-```
