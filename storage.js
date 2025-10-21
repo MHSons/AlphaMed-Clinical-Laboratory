@@ -1,81 +1,131 @@
-```javascript
-function savePatient(patient) {
-  try {
-    let patients = JSON.parse(localStorage.getItem("patients") || "[]");
-    if (patients.some(p => p.cnic === patient.cnic)) {
-      if (!confirm("Patient with this CNIC is already registered. Do you want to add again?")) {
-        return false;
-      }
-    }
-    patients.push(patient);
-    localStorage.setItem("patients", JSON.stringify(patients));
-    return true;
-  } catch (err) {
-    console.error("Error saving patient:", err);
-    return false;
+/* =========================================================
+   storage.js — Local Storage Manager for Medical Lab System
+   ---------------------------------------------------------
+   - All data stored locally (for demo use only)
+   - Replace with server API in production
+========================================================= */
+
+// ✅ Initialize default structure if not exists
+if (!localStorage.getItem("lab_data")) {
+  localStorage.setItem(
+    "lab_data",
+    JSON.stringify({
+      users: [
+        { id: 1, name: "Admin", username: "admin", password: "12345", role: "admin" },
+        { id: 2, name: "Receptionist", username: "reception", password: "12345", role: "reception" },
+        { id: 3, name: "Technician", username: "tech", password: "12345", role: "technician" }
+      ],
+      patients: [],
+      tests: [],
+      reports: []
+    })
+  );
+}
+
+/* ---------------------------------------------------------
+   Helper Functions
+--------------------------------------------------------- */
+function getData() {
+  return JSON.parse(localStorage.getItem("lab_data"));
+}
+
+function setData(data) {
+  localStorage.setItem("lab_data", JSON.stringify(data));
+}
+
+/* ---------------------------------------------------------
+   USER AUTHENTICATION
+--------------------------------------------------------- */
+function loginUser(username, password) {
+  const db = getData();
+  const user = db.users.find(
+    u => u.username === username && u.password === password
+  );
+  if (user) {
+    localStorage.setItem("lab_current_user", JSON.stringify(user));
+    return user;
+  } else {
+    return null;
   }
 }
 
-function getAllPatients() {
-  try {
-    return JSON.parse(localStorage.getItem("patients") || "[]");
-  } catch (err) {
-    console.error("Error reading patients:", err);
-    return [];
-  }
+function getCurrentUser() {
+  const user = localStorage.getItem("lab_current_user");
+  return user ? JSON.parse(user) : null;
 }
 
-function saveTestResult(result) {
-  try {
-    let results = JSON.parse(localStorage.getItem("results") || "[]");
-    results.push(result);
-    localStorage.setItem("results", JSON.stringify(results));
-    return true;
-  } catch (err) {
-    console.error("Error saving test result:", err);
-    return false;
-  }
+function logoutUser() {
+  localStorage.removeItem("lab_current_user");
 }
 
-function getAllResults() {
-  try {
-    return JSON.parse(localStorage.getItem("results") || "[]");
-  } catch (err) {
-    console.error("Error reading results:", err);
-    return [];
-  }
+/* ---------------------------------------------------------
+   PATIENT MANAGEMENT
+--------------------------------------------------------- */
+function registerPatient(patientData) {
+  const db = getData();
+  patientData.id = Date.now();
+  db.patients.push(patientData);
+  setData(db);
+  return patientData;
 }
 
-function clearAllPatients() {
-  if (confirm("Are you sure you want to delete all patients?")) {
-    localStorage.removeItem("patients");
-    localStorage.removeItem("results");
-    alert("All patients and results cleared!");
-  }
+function getPatients() {
+  const db = getData();
+  return db.patients;
 }
 
-function validateUser(username, password) {
-  try {
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    return users.some(user => user.username === username && user.password === password);
-  } catch (err) {
-    console.error("Error validating user:", err);
-    return false;
-  }
+/* ---------------------------------------------------------
+   TEST MANAGEMENT
+--------------------------------------------------------- */
+function addTestResult(testData) {
+  const db = getData();
+  testData.id = Date.now();
+  db.tests.push(testData);
+  setData(db);
+  return testData;
 }
 
-function attachTableSearch(inputId, tableId) {
-  const input = document.getElementById(inputId);
-  const table = document.getElementById(tableId);
-  if (!input || !table) return;
-  input.addEventListener("keyup", function () {
-    const filter = input.value.toLowerCase();
-    const rows = table.getElementsByTagName("tr");
-    for (let i = 0; i < rows.length; i++) {
-      if (rows[i].getElementsByTagName("th").length > 0) continue;
-      const rowText = rows[i].textContent.toLowerCase();
-      rows[i].style.display = rowText.includes(filter) ? "" : "none";
-    }
-  });
+function getTestResults(patientId) {
+  const db = getData();
+  return db.tests.filter(t => t.patientId === patientId);
 }
-```
+
+/* ---------------------------------------------------------
+   REPORT MANAGEMENT
+--------------------------------------------------------- */
+function addReport(reportData) {
+  const db = getData();
+  reportData.id = Date.now();
+  db.reports.push(reportData);
+  setData(db);
+  return reportData;
+}
+
+function getReports() {
+  const db = getData();
+  return db.reports;
+}
+
+/* ---------------------------------------------------------
+   USER MANAGEMENT (Admin)
+--------------------------------------------------------- */
+function addUser(user) {
+  const db = getData();
+  user.id = Date.now();
+  db.users.push(user);
+  setData(db);
+  return user;
+}
+
+function getUsers() {
+  return getData().users;
+}
+
+/* ---------------------------------------------------------
+   UTILITY
+--------------------------------------------------------- */
+function clearAllData() {
+  localStorage.removeItem("lab_data");
+  localStorage.removeItem("lab_current_user");
+  alert("All local data cleared.");
+}
