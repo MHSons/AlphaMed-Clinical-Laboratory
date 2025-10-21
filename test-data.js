@@ -445,3 +445,375 @@ export const allTestsPart3 = [
   ...molecularBiology,
   ...pcrSection
 ];
+// ===================== PART 4 ===================== //
+
+export const cytology = [
+  {
+    id: "CYT_PAP",
+    name: "Pap Smear Test",
+    department: "Cytology",
+    parameters: [
+      { parameter: "Epithelial Cells", unit: "Result", range: "Normal" },
+      { parameter: "Inflammatory Cells", unit: "Result", range: "Absent" }
+    ]
+  },
+  {
+    id: "CYT_FLUID",
+    name: "Body Fluid Cytology",
+    department: "Cytology",
+    parameters: [
+      { parameter: "Cell Type", unit: "Result", range: "Normal Cells" },
+      { parameter: "Malignant Cells", unit: "Result", range: "Absent" }
+    ]
+  }
+];
+
+export const histopathology = [
+  {
+    id: "HIST_BIOPSY",
+    name: "Biopsy Examination",
+    department: "Histopathology",
+    parameters: [
+      { parameter: "Tissue Type", unit: "Result", range: "Benign/Malignant" },
+      { parameter: "Diagnosis", unit: "Result", range: "As Reported" }
+    ]
+  },
+  {
+    id: "HIST_FROZEN",
+    name: "Frozen Section",
+    department: "Histopathology",
+    parameters: [
+      { parameter: "Microscopy", unit: "Result", range: "As Reported" }
+    ]
+  }
+];
+
+export const clinicalChemistry = [
+  {
+    id: "CHEM_GLU",
+    name: "Glucose Fasting",
+    department: "Clinical Chemistry",
+    parameters: [
+      { parameter: "Glucose (Fasting)", unit: "mg/dL", range: "70-110" }
+    ]
+  },
+  {
+    id: "CHEM_BUN",
+    name: "Blood Urea Nitrogen (BUN)",
+    department: "Clinical Chemistry",
+    parameters: [
+      { parameter: "BUN", unit: "mg/dL", range: "7-20" }
+    ]
+  },
+  {
+    id: "CHEM_URIC",
+    name: "Uric Acid",
+    department: "Clinical Chemistry",
+    parameters: [
+      { parameter: "Uric Acid", unit: "mg/dL", range: "3.4-7.0" }
+    ]
+  }
+];
+
+export const parasitology = [
+  {
+    id: "PARA_MALARIA",
+    name: "Malaria Parasite (MP Test)",
+    department: "Parasitology",
+    parameters: [
+      { parameter: "MP Smear", unit: "Result", range: "Negative" }
+    ]
+  },
+  {
+    id: "PARA_FILARIA",
+    name: "Filaria Parasite Test",
+    department: "Parasitology",
+    parameters: [
+      { parameter: "Filaria", unit: "Result", range: "Negative" }
+    ]
+  }
+];
+
+export const toxicology = [
+  {
+    id: "TOX_ALCOHOL",
+    name: "Blood Alcohol Level",
+    department: "Toxicology",
+    parameters: [
+      { parameter: "Ethanol", unit: "mg/dL", range: "<10" }
+    ]
+  },
+  {
+    id: "TOX_LEAD",
+    name: "Blood Lead Level",
+    department: "Toxicology",
+    parameters: [
+      { parameter: "Lead", unit: "µg/dL", range: "<10" }
+    ]
+  },
+  {
+    id: "TOX_MERCURY",
+    name: "Mercury Level",
+    department: "Toxicology",
+    parameters: [
+      { parameter: "Mercury", unit: "µg/L", range: "<5" }
+    ]
+  }
+];
+
+export const allTestsPart4 = [
+  ...cytology,
+  ...histopathology,
+  ...clinicalChemistry,
+  ...parasitology,
+  ...toxicology
+];
+// ===================== PART 5 ===================== //
+
+export const bloodBank = [
+  {
+    id: "BB_BLOODGROUP",
+    name: "Blood Grouping & Rh Typing",
+    department: "Blood Bank",
+    parameters: [
+      { parameter: "ABO Group", unit: "Result", range: "A/B/AB/O" },
+      { parameter: "Rh Factor", unit: "Result", range: "+ve/-ve" }
+    ]
+  },
+  {
+    id: "BB_CROSS",
+    name: "Cross Match",
+    department: "Blood Bank",
+    parameters: [
+      { parameter: "Cross Match", unit: "Result", range: "Compatible" }
+    ]
+  },
+  {
+    id: "BB_SCREEN",
+    name: "Antibody Screening",
+    department: "Blood Bank",
+    parameters: [
+      { parameter: "Antibodies", unit: "Result", range: "Negative" }
+    ]
+  }
+];
+
+export const sampling = [
+  {
+    id: "SMP_VENIPUNCTURE",
+    name: "Venipuncture Sample Collection",
+    department: "Sampling",
+    parameters: [
+      { parameter: "Sample Type", unit: "", range: "Blood" },
+      { parameter: "Tube Type", unit: "", range: "EDTA/Serum" }
+    ]
+  },
+  {
+    id: "SMP_URINE",
+    name: "Urine Sample Collection",
+    department: "Sampling",
+    parameters: [
+      { parameter: "Sample Type", unit: "", range: "Urine (Midstream)" }
+    ]
+  }
+];
+
+export const infectiousDiseases = [
+  {
+    id: "INF_TB",
+    name: "Tuberculosis (AFB Smear)",
+    department: "Infectious Diseases",
+    parameters: [
+      { parameter: "AFB Smear", unit: "Result", range: "Negative" }
+    ]
+  },
+  {
+    id: "INF_MALARIA",
+    name: "Malaria Antigen Test",
+    department: "Infectious Diseases",
+    parameters: [
+      { parameter: "Malaria Antigen", unit: "Result", range: "Negative" }
+    ]
+  },
+  {
+    id: "INF_TYPHOID",
+    name: "Typhidot IgM/IgG",
+    department: "Infectious Diseases",
+    parameters: [
+      { parameter: "Typhidot IgM", unit: "Result", range: "Negative" },
+      { parameter: "Typhidot IgG", unit: "Result", range: "Negative" }
+    ]
+  }
+];
+
+export const nutrition = [
+  {
+    id: "NUT_VITD",
+    name: "Vitamin D (25-OH)",
+    department: "Nutrition",
+    parameters: [
+      { parameter: "Vitamin D", unit: "ng/mL", range: "30-100" }
+    ]
+  },
+  {
+    id: "NUT_VITB12",
+    name: "Vitamin B12",
+    department: "Nutrition",
+    parameters: [
+      { parameter: "Vitamin B12", unit: "pg/mL", range: "200-900" }
+    ]
+  },
+  {
+    id: "NUT_FOLATE",
+    name: "Serum Folate",
+    department: "Nutrition",
+    parameters: [
+      { parameter: "Folate", unit: "ng/mL", range: "3-17" }
+    ]
+  }
+];
+
+export const miscellaneous = [
+  {
+    id: "MISC_CRPHS",
+    name: "High Sensitivity CRP",
+    department: "Miscellaneous",
+    parameters: [
+      { parameter: "hs-CRP", unit: "mg/L", range: "<3" }
+    ]
+  },
+  {
+    id: "MISC_DDIMER",
+    name: "D-Dimer",
+    department: "Miscellaneous",
+    parameters: [
+      { parameter: "D-Dimer", unit: "ng/mL", range: "<500" }
+    ]
+  },
+  {
+    id: "MISC_PROCAL",
+    name: "Procalcitonin",
+    department: "Miscellaneous",
+    parameters: [
+      { parameter: "Procalcitonin", unit: "ng/mL", range: "<0.1" }
+    ]
+  }
+];
+
+export const allTestsPart5 = [
+  ...bloodBank,
+  ...sampling,
+  ...infectiousDiseases,
+  ...nutrition,
+  ...miscellaneous
+];
+// ===================== PART 6 ===================== //
+
+export const radiologyInterface = [
+  {
+    id: "RAD_XRAYCHEST",
+    name: "X-Ray Chest PA View",
+    department: "Radiology Interface",
+    parameters: [
+      { parameter: "Film Quality", unit: "Result", range: "Acceptable" },
+      { parameter: "Findings", unit: "Result", range: "As Reported" }
+    ]
+  },
+  {
+    id: "RAD_ULTRASOUND",
+    name: "Abdominal Ultrasound",
+    department: "Radiology Interface",
+    parameters: [
+      { parameter: "Liver", unit: "Result", range: "Normal Size" },
+      { parameter: "Kidneys", unit: "Result", range: "Normal" }
+    ]
+  }
+];
+
+export const qualityControl = [
+  {
+    id: "QC_INTERNAL",
+    name: "Internal Quality Control",
+    department: "Quality Control",
+    parameters: [
+      { parameter: "Accuracy", unit: "%", range: ">95" },
+      { parameter: "Precision", unit: "%", range: ">90" }
+    ]
+  },
+  {
+    id: "QC_EXTERNAL",
+    name: "External Quality Assessment (EQA)",
+    department: "Quality Control",
+    parameters: [
+      { parameter: "Performance", unit: "%", range: ">90" }
+    ]
+  }
+];
+
+export const wasteManagement = [
+  {
+    id: "WM_BIO",
+    name: "Biomedical Waste Disposal",
+    department: "Waste Management",
+    parameters: [
+      { parameter: "Sharps Disposal", unit: "Status", range: "Properly Sealed" },
+      { parameter: "Biohazard Bags", unit: "Status", range: "Labeled & Segregated" }
+    ]
+  },
+  {
+    id: "WM_CHEM",
+    name: "Chemical Waste Handling",
+    department: "Waste Management",
+    parameters: [
+      { parameter: "Neutralization", unit: "Status", range: "Completed" }
+    ]
+  }
+];
+
+export const environmental = [
+  {
+    id: "ENV_AIR",
+    name: "Air Quality Test",
+    department: "Environmental Monitoring",
+    parameters: [
+      { parameter: "Particulate Matter (PM2.5)", unit: "µg/m³", range: "<25" },
+      { parameter: "CO₂ Level", unit: "ppm", range: "<1000" }
+    ]
+  },
+  {
+    id: "ENV_WATER",
+    name: "Water Quality Test",
+    department: "Environmental Monitoring",
+    parameters: [
+      { parameter: "pH", unit: "", range: "6.5-8.5" },
+      { parameter: "TDS", unit: "ppm", range: "<500" }
+    ]
+  }
+];
+
+export const researchDevelopment = [
+  {
+    id: "RES_PROTOCOL",
+    name: "New Test Protocol Validation",
+    department: "Research & Development",
+    parameters: [
+      { parameter: "Validation Status", unit: "Result", range: "Approved" }
+    ]
+  },
+  {
+    id: "RES_PILOT",
+    name: "Pilot Study Sample Analysis",
+    department: "Research & Development",
+    parameters: [
+      { parameter: "Samples Tested", unit: "Count", range: ">10" }
+    ]
+  }
+];
+
+export const allTestsPart6 = [
+  ...radiologyInterface,
+  ...qualityControl,
+  ...wasteManagement,
+  ...environmental,
+  ...researchDevelopment
+];
