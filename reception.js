@@ -1,11 +1,13 @@
-// ✅ Load tests dynamically when department changes
+```javascript
 function loadTestsByDepartment() {
-  const department = document.getElementById("department").value;
+  const department = document.getElementById("department")?.value;
   const testsContainer = document.getElementById("tests");
+  if (!testsContainer) return;
+
   testsContainer.innerHTML = "";
 
   if (!window.testData) {
-    testsContainer.innerHTML = "<em>Test data not loaded!</em>";
+    testsContainer.innerHTML = '<div class="error">Test data not loaded!</div>';
     return;
   }
 
@@ -14,7 +16,7 @@ function loadTestsByDepartment() {
       const label = document.createElement("label");
       label.style.display = "block";
       label.innerHTML = `
-        <input type="checkbox" value="${test.name}">
+        <input type="checkbox" value="${test.id}">
         <strong>${test.name}</strong> 
         <span style="color:#555; font-size: 13px">
           (${test.parameter}, Normal: ${test.normalRange})
@@ -24,71 +26,90 @@ function loadTestsByDepartment() {
   }
 }
 
-// ✅ Register new patient
-function registerPatient() {
-  const name = document.getElementById("name").value.trim();
-  const gender = document.getElementById("gender").value;
-  const age = document.getElementById("age").value;
-  const phone = document.getElementById("phone").value;
-  const address = document.getElementById("address").value;
-  const department = document.getElementById("department").value;
+function registerPatient(event) {
+  event.preventDefault();
+  const patient = {
+    name: document.getElementById("name")?.value.trim(),
+    cnic: document.getElementById("cnic")?.value.trim(),
+    phone: document.getElementById("phone")?.value.trim(),
+    department: document.getElementById("department")?.value,
+    tests: Array.from(
+      document.querySelectorAll('#tests input[type="checkbox"]:checked')
+    ).map(c => c.value),
+    date: document.getElementById("date")?.value || new Date().toISOString().split("T")[0],
+    mrn: `MRN-${Date.now()}`
+  };
+  const errorDiv = document.getElementById("error");
 
-  const testsChecked = Array.from(
-    document.querySelectorAll('#tests input[type="checkbox"]:checked')
-  ).map(c => c.value);
-
-  if (!name || !department) {
-    alert("Please fill required fields (Name and Department).");
+  if (!patient.name || !patient.cnic || !patient.department || patient.tests.length === 0) {
+    errorDiv.textContent = "Please fill required fields (Name, CNIC, Department, Tests)";
     return;
   }
 
-  const patient = {
-    id: Date.now(),
-    name,
-    gender,
-    age,
-    phone,
-    address,
-    department,
-    tests: testsChecked,
-    date: new Date().toISOString()
-  };
+  if (!/^\d{5}-\d{7}-\d{1}$/.test(patient.cnic)) {
+    errorDiv.textContent = "Invalid CNIC format (e.g., 12345-1234567-1)";
+    return;
+  }
 
-  // ✅ Save patient to localStorage
-  const patients = JSON.parse(localStorage.getItem("patients") || "[]");
-  patients.push(patient);
-  localStorage.setItem("patients", JSON.stringify(patients));
+  if (patient.phone && !/^\d{4}-\d{7}$/.test(patient.phone)) {
+    errorDiv.textContent = "Invalid phone format (e.g., 0300-1234567)";
+    return;
+  }
 
+  const saved = window.savePatient(patient);
+  if (!saved) {
+    errorDiv.textContent = "⚠️ This CNIC is already registered";
+    return;
+  }
+
+  localStorage.setItem("latestPatient", JSON.stringify(patient));
   alert("Patient registered successfully!");
-  loadPatientList();
+  window.location.href = "registration-slip.html";
 }
 
-// ✅ Load patient list
 function loadPatientList() {
-  const patients = JSON.parse(localStorage.getItem("patients") || "[]");
+  const patients = window.getAllPatients();
   const tbody = document.getElementById("patientList");
+  if (!tbody) return;
+
   tbody.innerHTML = "";
 
   patients.forEach(p => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${p.name}</td>
-      <td>${p.gender}</td>
-      <td>${p.age || ""}</td>
+      <td>${p.cnic}</td>
       <td>${p.phone || ""}</td>
       <td>${p.department}</td>
-      <td>${(p.tests || []).join(", ")}</td>
-      <td>${(p.date || "").split("T")[0]}</td>
+      <td>${p.tests
+        .map(testId => {
+          const test = Object.values(window.testData).flat().find(t => t.id === testId);
+          return test ? test.name : testId;
+        })
+        .join(", ")}</td>
+      <td>${p.date}</td>
     `;
     tbody.appendChild(tr);
   });
 
   if (document.getElementById("searchPatient")) {
-    attachTableSearch("searchPatient", "patientListTable");
+    window.attachTableSearch("searchPatient", "patientListTable");
   }
 }
 
-// ✅ Init on page load
 document.addEventListener("DOMContentLoaded", () => {
+  const departmentSelect = document.getElementById("department");
+  if (departmentSelect) {
+    departmentSelect.addEventListener("change", loadTestsByDepartment);
+    loadTestsByDepartment();
+  }
+
+  const patientForm = document.getElementById("patientForm");
+  if (patientForm) {
+    patientForm.addEventListener("submit", registerPatient);
+  }
+
   loadPatientList();
 });
+```
+
