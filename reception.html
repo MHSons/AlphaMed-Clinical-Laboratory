@@ -1,156 +1,85 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Reception - Alpha-Med Lab</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reception Panel — Prime Medical Lab</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- ✅ Script order -->
-  <script defer src="test-data.js"></script>
-  <script defer src="storage.js"></script>
-  <script defer src="script.js"></script>
-  <script defer src="reception.js"></script>
-
+  <link rel="icon" href="logo.png" />
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f9f9f9;
-      margin: 0;
-      padding: 20px;
-    }
     .container {
-      max-width: 1000px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      max-width: 1100px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    h2, h3 { color: #333; margin-bottom: 10px; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; font-weight: 600; margin-bottom: 5px; }
-    input, select, button {
-      padding: 8px;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
     }
-    button {
-      background: #007BFF;
-      color: white;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover { background: #0056b3; }
-    #tests label { display: block; margin-bottom: 4px; }
     table {
-      width: 100%; border-collapse: collapse; margin-top: 15px;
+      width: 100%;
+      border-collapse: collapse;
     }
     th, td {
-      border: 1px solid #ddd; padding: 8px; text-align: left;
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
     }
-    th { background: #007BFF; color: white; }
-    tr:nth-child(even) { background: #f2f2f2; }
+    th {
+      background: #0078d7;
+      color: #fff;
+    }
+    .status {
+      font-weight: bold;
+    }
+    .status-pending {
+      color: #d17b00;
+    }
+    .status-complete {
+      color: green;
+    }
+    .btn-small {
+      font-size: 0.9em;
+      padding: 5px 10px;
+    }
   </style>
 </head>
 <body>
+  <header class="topbar">
+    <div class="container actions">
+      <h2>Reception Panel</h2>
+      <div>
+        <button class="btn btn-small" onclick="window.location.href='register_patient.html'">+ Register Patient</button>
+        <button class="btn btn-small" onclick="window.location.href='change_password.html'">Change Password</button>
+        <button class="btn btn-small btn-outline" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
   <div class="container">
-    <h2>Patient Registration - Alpha-Med Lab</h2>
-
-    <div class="form-group">
-      <label>Name</label>
-      <input type="text" id="name" required />
-    </div>
-
-    <div class="form-group">
-      <label>Gender</label>
-      <select id="gender" required>
-        <option value="">-- Select --</option>
-        <option>Male</option>
-        <option>Female</option>
-        <option>Other</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Age</label>
-      <input type="number" id="age" />
-    </div>
-
-    <div class="form-group">
-      <label>Phone</label>
-      <input type="text" id="phone" />
-    </div>
-
-    <div class="form-group">
-      <label>Address</label>
-      <input type="text" id="address" />
-    </div>
-
-    <div class="form-group">
-      <label>Department</label>
-      <select id="department" onchange="loadTestsByDepartment()" required>
-        <option value="">-- Select Department --</option>
-        <option value="Hematology">Hematology</option>
-        <option value="Biochemistry">Biochemistry</option>
-        <option value="Serology">Serology</option>
-        <option value="Microbiology">Microbiology</option>
-        <option value="Urine">Urine</option>
-        <option value="Stool">Stool</option>
-        <option value="Immunology">Immunology</option>
-        <option value="Pathology">Pathology</option>
-        <option value="Endocrinology">Endocrinology</option>
-        <option value="Toxicology">Toxicology</option>
-        <option value="Molecular Biology">Molecular Biology</option>
-        <option value="Virology">Virology</option>
-        <option value="Parasitology">Parasitology</option>
-        <option value="Histopathology">Histopathology</option>
-        <option value="Genetics">Genetics</option>
-        <option value="Oncology">Oncology</option>
-        <option value="Allergy Testing">Allergy Testing</option>
-        <option value="Blood Bank">Blood Bank</option>
-        <option value="Cytology">Cytology</option>
-        <option value="Dermatology">Dermatology</option>
-        <option value="Cardiology">Cardiology</option>
-        <option value="Neurology">Neurology</option>
-        <option value="Gastroenterology">Gastroenterology</option>
-        <option value="Nephrology">Nephrology</option>
-        <option value="Pulmonology">Pulmonology</option>
-        <option value="Rheumatology">Rheumatology</option>
-        <option value="Infectious Diseases">Infectious Diseases</option>
-        <option value="Sports Medicine">Sports Medicine</option>
-        <option value="Occupational Health">Occupational Health</option>
-        <option value="General Screening">General Screening</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Tests</label>
-      <div id="tests"></div>
-    </div>
-
-    <div class="form-group">
-      <button onclick="registerPatient()">Register Patient</button>
-    </div>
-
-    <hr />
-
     <h3>Registered Patients</h3>
-    <input id="searchPatient" placeholder="Search patients..." />
-    <table id="patientListTable">
+    <table>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Gender</th>
+          <th>#</th>
+          <th>Patient Name</th>
           <th>Age</th>
-          <th>Phone</th>
-          <th>Dept</th>
-          <th>Tests</th>
-          <th>Date</th>
+          <th>Gender</th>
+          <th>Test</th>
+          <th>Status</th>
+          <th>Slip</th>
+          <th>Action</th>
         </tr>
       </thead>
-      <tbody id="patientList"></tbody>
+      <tbody id="patientTable"></tbody>
     </table>
   </div>
+
+  <script src="storage.js"></script>
+  <script src="reception.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
