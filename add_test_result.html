@@ -1,122 +1,113 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Test Result - AlphaMed Clinical Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Test Result - Alpha-Med Clinical Lab</title>
   <link rel="stylesheet" href="style.css" />
-  <script defer src="technician.js"></script>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f5f7fa;
-      padding: 20px;
-    }
-    h2 {
-      color: #333;
-      text-align: center;
-    }
-    .search-box {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input[type="text"] {
-      width: 300px;
-      padding: 10px;
-      border: 1px solid #aaa;
-      border-radius: 5px;
-    }
-    .result-form {
-      max-width: 700px;
-      margin: auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .result-form label {
-      display: block;
-      margin: 10px 0 5px;
-    }
-    .result-form input, .result-form select, .result-form textarea {
-      width: 100%;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background-color: #007bff;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 6px;
-      margin-top: 20px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .patient-list {
-      margin-top: 30px;
-    }
-  </style>
 </head>
 <body>
-  <h2>Add Test Result - AlphaMed Clinical Lab</h2>
+  <header>
+    <h1>Add Test Result - Alpha-Med Clinical Lab</h1>
+  </header>
 
-  <div class="search-box">
-    <input type="text" id="searchMRN" placeholder="Enter MRN to search patient..." onkeyup="searchPatient()" />
+  <div class="container">
+    <div class="search-box">
+      <input type="text" id="searchMRN" placeholder="Enter MRN to search patient..." />
+    </div>
+
+    <div id="patientInfo" class="result-form" style="display:none;">
+      <h3>Patient Details</h3>
+      <p><strong>Name:</strong> <span id="patientName"></span></p>
+      <p><strong>MRN:</strong> <span id="patientMRN"></span></p>
+      <p><strong>Department:</strong> <span id="patientDept"></span></p>
+      <p><strong>Registered Tests:</strong> <span id="patientTests"></span></p>
+      <div class="error" id="error"></div>
+
+      <h4>Enter Test Result</h4>
+      <label for="testName">Test Name</label>
+      <select id="testName" required>
+        <option value="">Select Test</option>
+      </select>
+
+      <label for="result">Result</label>
+      <textarea id="result" rows="4" placeholder="Enter result details..." required></textarea>
+
+      <button onclick="saveTestResult()">Save Result</button>
+    </div>
   </div>
 
-  <div id="patientInfo" class="result-form" style="display:none;">
-    <h3>Patient Details</h3>
-    <p><strong>Name:</strong> <span id="patientName"></span></p>
-    <p><strong>MRN:</strong> <span id="patientMRN"></span></p>
-    <p><strong>Department:</strong> <span id="patientDept"></span></p>
+  <footer>&copy; 2025 Alpha-Med Clinical Lab</footer>
 
-    <h4>Enter Test Result</h4>
-    <label for="testName">Test Name</label>
-    <input type="text" id="testName" required />
-
-    <label for="result">Result</label>
-    <textarea id="result" rows="4" placeholder="Enter result details..." required></textarea>
-
-    <button onclick="saveTestResult()">Save Result</button>
-  </div>
-
+  <script src="test-data.js"></script>
+  <script src="storage.js"></script>
   <script>
     function searchPatient() {
       const mrn = document.getElementById("searchMRN").value.trim();
-      const storedPatients = JSON.parse(localStorage.getItem("patients")) || [];
-      const patient = storedPatients.find(p => p.mrn === mrn);
-      
+      const errorDiv = document.getElementById("error");
+      const patientInfo = document.getElementById("patientInfo");
+      const testSelect = document.getElementById("testName");
+
+      const patients = window.getAllPatients();
+      const patient = patients.find(p => p.mrn === mrn);
+
       if (patient) {
-        document.getElementById("patientName").innerText = patient.name;
-        document.getElementById("patientMRN").innerText = patient.mrn;
-        document.getElementById("patientDept").innerText = patient.department;
-        document.getElementById("patientInfo").style.display = "block";
+        document.getElementById("patientName").textContent = patient.name;
+        document.getElementById("patientMRN").textContent = patient.mrn;
+        document.getElementById("patientDept").textContent = patient.department;
+        document.getElementById("patientTests").textContent = patient.tests
+          .map(testId => {
+            const test = Object.values(window.testData).flat().find(t => t.id === testId);
+            return test ? test.name : testId;
+          })
+          .join(", ");
+        
+        testSelect.innerHTML = '<option value="">Select Test</option>';
+        patient.tests.forEach(testId => {
+          const test = Object.values(window.testData).flat().find(t => t.id === testId);
+          if (test) {
+            const option = document.createElement("option");
+            option.value = test.id;
+            option.textContent = test.name;
+            testSelect.appendChild(option);
+          }
+        });
+
+        patientInfo.style.display = "block";
+        errorDiv.textContent = "";
       } else {
-        document.getElementById("patientInfo").style.display = "none";
+        patientInfo.style.display = "none";
+        errorDiv.textContent = "No patient found with this MRN";
       }
     }
 
     function saveTestResult() {
-      const mrn = document.getElementById("patientMRN").innerText;
-      const testName = document.getElementById("testName").value.trim();
+      const mrn = document.getElementById("patientMRN").textContent;
+      const testId = document.getElementById("testName").value;
       const result = document.getElementById("result").value.trim();
-      if (!testName || !result) {
-        alert("Please enter all fields.");
+      const errorDiv = document.getElementById("error");
+
+      if (!testId || !result) {
+        errorDiv.textContent = "Please select a test and enter result details";
         return;
       }
 
-      const storedResults = JSON.parse(localStorage.getItem("results") || "[]");
-      storedResults.push({ mrn, testName, result, date: new Date().toLocaleString() });
-      localStorage.setItem("results", JSON.stringify(storedResults));
+      const test = Object.values(window.testData).flat().find(t => t.id === testId);
+      const testName = test ? test.name : testId;
 
-      alert("Result saved successfully!");
-      document.getElementById("testName").value = "";
-      document.getElementById("result").value = "";
+      const saved = window.saveTestResult({ mrn, testId, testName, result, date: new Date().toISOString().split("T")[0] });
+      if (saved) {
+        alert("Result saved successfully!");
+        document.getElementById("testName").value = "";
+        document.getElementById("result").value = "";
+      } else {
+        errorDiv.textContent = "Error saving test result";
+      }
     }
+
+    document.getElementById("searchMRN").addEventListener("keyup", searchPatient);
   </script>
 </body>
 </html>
+```
