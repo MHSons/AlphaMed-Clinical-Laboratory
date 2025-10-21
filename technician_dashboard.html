@@ -3,74 +3,132 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Technician Dashboard — Prime Medical Lab</title>
+  <title>Technician Dashboard Summary — Prime Medical Lab</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="logo.png" />
+  <style>
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+    .card {
+      background: #f8f9fb;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 6px rgba(0,0,0,0.05);
+    }
+    .card h3 {
+      margin: 0;
+      color: #0078d7;
+    }
+    .recent {
+      margin-top: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #0078d7;
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="topbar">
-    <div class="container">
-      <div class="brand">
-        <img src="logo.png" alt="Lab Logo" class="logo" />
-        <h1>Technician Dashboard</h1>
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+      <h2>Technician Summary Dashboard</h2>
+      <div>
+        <button class="btn btn-small" onclick="window.location.href='technician.html'">Go to Tests</button>
+        <button class="btn btn-small btn-outline" onclick="logout()">Logout</button>
       </div>
-      <nav class="main-nav">
-        <a href="technician_dashboard.html" class="active">Dashboard</a>
-        <a href="add_test_result.html">Add Test Result</a>
-        <a href="view_reports.html">View Reports</a>
-        <button onclick="logout()" class="btn-logout">Logout</button>
-      </nav>
     </div>
   </header>
 
-  <!-- Main -->
-  <main class="container main-content">
-    <section class="dashboard-header">
-      <h2>Welcome, <span id="currentUser"></span></h2>
-      <p>Manage and update patient test results efficiently.</p>
-    </section>
-
-    <section class="dashboard-grid">
+  <div class="container">
+    <div class="stats">
       <div class="card">
-        <h3>Add Test Result</h3>
-        <p>Enter results for patients whose samples are received.</p>
-        <a href="add_test_result.html" class="btn">Open</a>
+        <h3 id="totalTests">0</h3>
+        <p>Total Assigned Tests</p>
       </div>
-
       <div class="card">
-        <h3>Pending Tests</h3>
-        <p>View list of patients awaiting test results.</p>
-        <a href="add_test_result.html#pending" class="btn">View</a>
+        <h3 id="completedTests">0</h3>
+        <p>Completed Tests</p>
       </div>
-
       <div class="card">
-        <h3>Completed Reports</h3>
-        <p>View and manage all completed test reports.</p>
-        <a href="view_reports.html" class="btn">Open</a>
+        <h3 id="pendingTests">0</h3>
+        <p>Pending Tests</p>
       </div>
-
-      <div class="card">
-        <h3>Export Data</h3>
-        <p>Export patient test records for ISO audit or data review.</p>
-        <a href="export.html" class="btn">Open</a>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; <span id="year"></span> Prime Medical Lab — Technician Dashboard</p>
     </div>
-  </footer>
 
-  <!-- JS -->
+    <div class="recent">
+      <h3>Recent Activity</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Test</th>
+            <th>Status</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody id="recentTable"></tbody>
+      </table>
+    </div>
+  </div>
+
   <script src="storage.js"></script>
-  <script src="script.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      showCurrentUserInfo();
+      const user = getLoggedInUser();
+      if (!user || user.role !== "technician") {
+        alert("Access denied! Only technicians can view this page.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const tests = getAllTests().filter(t => t.technician === user.username);
+      const total = tests.length;
+      const completed = tests.filter(t => t.status === "Completed").length;
+      const pending = total - completed;
+
+      document.getElementById("totalTests").textContent = total;
+      document.getElementById("completedTests").textContent = completed;
+      document.getElementById("pendingTests").textContent = pending;
+
+      const tbody = document.getElementById("recentTable");
+      tbody.innerHTML = "";
+
+      if (tests.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='4'>No test activity yet.</td></tr>";
+        return;
+      }
+
+      tests.slice(-5).reverse().forEach(test => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${test.patientName}</td>
+          <td>${test.testName}</td>
+          <td>${test.status}</td>
+          <td>${test.result ? test.result : "-"}</td>
+        `;
+        tbody.appendChild(tr);
+      });
     });
   </script>
 </body>
