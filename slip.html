@@ -1,152 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Patient Slip - Alpha-Med Clinical Lab</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Patient Test Slip — Prime Medical Lab</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="logo.png" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background-color: #fff;
-      background-image: url('logo.png');
-      background-size: 200px;
-      background-position: center;
-      background-repeat: no-repeat;
-      opacity: 0.95;
+    .slip-wrapper {
+      max-width: 600px;
+      margin: 30px auto;
+      background: #fff;
+      border: 2px solid #0078d7;
+      border-radius: 12px;
+      padding: 20px 30px;
+      font-family: "Segoe UI", sans-serif;
     }
-
-    .slip-container {
-      max-width: 700px;
-      margin: 0 auto;
-      border: 2px solid #000;
-      padding: 20px;
-      background-color: white;
-      position: relative;
-    }
-
-    .lab-header {
+    .slip-header {
       text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .lab-header h2 {
-      margin: 0;
-      font-size: 24px;
-    }
-
-    .lab-header p {
-      font-size: 14px;
-    }
-
-    .section {
+      border-bottom: 2px solid #0078d7;
       margin-bottom: 15px;
-    }
-
-    .section h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid #ccc;
       padding-bottom: 5px;
     }
-
-    .section p {
+    .slip-header img {
+      height: 60px;
+    }
+    .slip-header h2 {
       margin: 5px 0;
     }
-
-    .footer {
+    .slip-header p {
+      font-size: 13px;
+      color: #555;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    td {
+      padding: 6px 8px;
+      border-bottom: 1px dotted #ccc;
+    }
+    .qr {
       text-align: center;
-      margin-top: 30px;
-      font-weight: bold;
-      font-size: 16px;
-      border-top: 1px dashed #000;
-      padding-top: 10px;
+      margin-top: 20px;
     }
-
+    .slip-footer {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 13px;
+      color: #555;
+    }
+    .no-print {
+      text-align: center;
+      margin-top: 20px;
+    }
     @media print {
-      button {
-        display: none;
-      }
-
-      body {
-        background: white;
-      }
-    }
-
-    .watermark {
-      position: absolute;
-      top: 40%;
-      left: 25%;
-      font-size: 50px;
-      color: #cccccc;
-      transform: rotate(-30deg);
-      pointer-events: none;
-      opacity: 0.2;
-      z-index: 0;
+      .no-print { display: none; }
+      body { background: white; }
     }
   </style>
 </head>
 <body>
-  <div class="slip-container">
-    <div class="lab-header">
-      <h2>Alpha-Med Clinical Lab</h2>
-      <p>Email: info@alphamedlab.com | Phone: 0300-0000000</p>
+  <div class="slip-wrapper" id="slipWrapper">
+    <div class="slip-header">
+      <img src="logo.png" alt="Lab Logo" />
+      <h2>Prime Medical Diagnostic Laboratory</h2>
+      <p>ISO 15189:2022 Certified — Lahore, Pakistan</p>
     </div>
 
-    <div class="section">
-      <h3>Patient Information</h3>
-      <p><strong>Name:</strong> <span id="patientName"></span></p>
-      <p><strong>Age:</strong> <span id="patientAge"></span></p>
-      <p><strong>Gender:</strong> <span id="patientGender"></span></p>
-      <p><strong>CNIC:</strong> <span id="patientCNIC"></span></p>
-      <p><strong>Contact:</strong> <span id="patientPhone"></span></p>
+    <table>
+      <tr><td><strong>Patient ID:</strong></td><td id="pid"></td></tr>
+      <tr><td><strong>Name:</strong></td><td id="pname"></td></tr>
+      <tr><td><strong>Age:</strong></td><td id="page"></td></tr>
+      <tr><td><strong>Gender:</strong></td><td id="pgender"></td></tr>
+      <tr><td><strong>Contact:</strong></td><td id="pcontact"></td></tr>
+      <tr><td><strong>Test Type:</strong></td><td id="ptest"></td></tr>
+      <tr><td><strong>Technician:</strong></td><td id="ptech"></td></tr>
+      <tr><td><strong>Date Completed:</strong></td><td id="pdate"></td></tr>
+    </table>
+
+    <div class="qr">
+      <canvas id="qrCanvas"></canvas>
     </div>
 
-    <div class="section">
-      <h3>Test Details</h3>
-      <ul id="testList"></ul>
+    <div class="slip-footer">
+      <p>For verification, scan the QR code or visit Prime Medical Lab website.</p>
+      <p>Thank you for trusting Prime Medical Lab.</p>
     </div>
-
-    <div class="section">
-      <h3>Registered By</h3>
-      <p><strong>Receptionist:</strong> <span id="receptionist"></span></p>
-      <p><strong>Date:</strong> <span id="registrationDate"></span></p>
-    </div>
-
-    <div class="footer">
-      Alpha-Med Clinical Lab
-    </div>
-
-    <div class="watermark">Alpha-Med</div>
   </div>
 
-  <div style="text-align:center; margin-top:20px;">
-    <button onclick="window.print()">🖨️ Print Slip</button>
+  <div class="no-print">
+    <button onclick="window.print()" class="btn">Print Slip</button>
+    <button onclick="window.location.href='view_reports.html'" class="btn btn-outline">Back</button>
   </div>
 
+  <!-- JS -->
+  <script src="storage.js"></script>
+  <script src="qr-generator.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const data = JSON.parse(localStorage.getItem("currentSlipData"));
-      if (!data) {
-        alert("No slip data found!");
+      const id = localStorage.getItem("currentReportId");
+      if (!id) {
+        alert("No report selected!");
+        window.location.href = "view_reports.html";
         return;
       }
 
-      document.getElementById("patientName").innerText = data.name;
-      document.getElementById("patientAge").innerText = data.age;
-      document.getElementById("patientGender").innerText = data.gender;
-      document.getElementById("patientCNIC").innerText = data.cnic;
-      document.getElementById("patientPhone").innerText = data.phone;
+      const patient = getPatients().find(p => p.id == id);
+      if (!patient || !patient.result) {
+        alert("No result data found for this patient.");
+        window.location.href = "view_reports.html";
+        return;
+      }
 
-      document.getElementById("receptionist").innerText = data.receptionist;
-      document.getElementById("registrationDate").innerText = data.date;
+      document.getElementById("pid").textContent = patient.id;
+      document.getElementById("pname").textContent = patient.name;
+      document.getElementById("page").textContent = patient.age;
+      document.getElementById("pgender").textContent = patient.gender;
+      document.getElementById("pcontact").textContent = patient.contact;
+      document.getElementById("ptest").textContent = patient.testType;
+      document.getElementById("ptech").textContent = patient.result.technician || "-";
+      document.getElementById("pdate").textContent = patient.result.completedAt || "-";
 
-      const testList = document.getElementById("testList");
-      data.tests.forEach(test => {
-        const li = document.createElement("li");
-        li.innerText = test;
-        testList.appendChild(li);
-      });
+      // Generate QR code for verification
+      const qrData = `Patient: ${patient.name}\nTest: ${patient.testType}\nResult: Completed\nID: ${patient.id}`;
+      generateQRCode("qrCanvas", qrData);
     });
   </script>
 </body>
