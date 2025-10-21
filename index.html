@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Alpha-Med Clinical Lab | Login</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="logo.png" type="image/png" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Alpha-Med Clinical Lab - Premier medical laboratory offering comprehensive diagnostic services.">
+  <meta name="keywords" content="medical lab, diagnostic tests, Alpha-Med, clinical laboratory, pathology, biochemistry">
+  <meta name="author" content="Alpha-Med Clinical Lab">
+  <title>Alpha-Med Clinical Lab | Welcome</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", sans-serif;
+      font-family: 'Roboto', sans-serif;
       background: #f0f4f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
     }
-
+    .hero-section {
+      background: linear-gradient(135deg, #007bff, #00ddeb);
+      color: white;
+      padding: 60px 0;
+      text-align: center;
+    }
+    .hero-section h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
     .container {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 30px;
       background: white;
-      padding: 40px;
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.2);
       text-align: center;
-      width: 90%;
-      max-width: 420px;
     }
-
     .logo {
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: auto;
       margin-bottom: 20px;
     }
-
-    h1 {
-      font-size: 26px;
-      color: #2c3e50;
-      margin-bottom: 30px;
-    }
-
     .login-btn {
       display: block;
       width: 100%;
@@ -50,35 +49,110 @@
       border: none;
       border-radius: 8px;
       font-size: 16px;
-      cursor: pointer;
       text-decoration: none;
+      transition: background 0.3s;
     }
-
     .login-btn:hover {
       background: #1a252f;
     }
-
+    .services-section {
+      padding: 40px 0;
+      background: #ffffff;
+    }
+    .services-section h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2c3e50;
+    }
+    .service-card {
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .qr-section {
+      text-align: center;
+      padding: 20px 0;
+    }
     .footer {
       margin-top: 20px;
-      font-size: 12px;
+      font-size: 0.85rem;
       color: #666;
+      text-align: center;
+      padding: 20px;
+      background: #e9ecef;
     }
   </style>
 </head>
 <body>
-
-  <div class="container">
-    <img src="logo.png" alt="Alpha-Med Clinical Lab Logo" class="logo" />
-    <h1>Welcome to Alpha-Med Clinical Lab</h1>
-
-    <a href="admin.html" class="login-btn">🔐 Admin Login</a>
-    <a href="reception.html" class="login-btn">🧾 Reception Login</a>
-    <a href="technician.html" class="login-btn">🧪 Technician Login</a>
-
-    <div class="footer">
-      &copy; 2025 Alpha-Med Clinical Lab. All Rights Reserved.
+  <!-- Hero Section -->
+  <section class="hero-section" role="banner">
+    <div class="container">
+      <img src="logo.png" alt="Alpha-Med Clinical Lab Official Logo" class="logo" />
+      <h1>Welcome to Alpha-Med Clinical Lab</h1>
+      <p>Premier diagnostic services with cutting-edge technology and ISO 15189 compliance.</p>
+      <a href="#login" class="btn btn-light mt-3">Access Your Portal</a>
     </div>
-  </div>
+  </section>
 
+  <!-- Login Section -->
+  <section id="login" class="container" role="main">
+    <h2 class="mb-4">Login to Your Account</h2>
+    <a href="admin.html" class="login-btn" role="button" aria-label="Admin Login">🔐 Admin Login</a>
+    <a href="reception.html" class="login-btn" role="button" aria-label="Reception Login">🧾 Reception Login</a>
+    <a href="technician.html" class="login-btn" role="button" aria-label="Technician Login">🧪 Technician Login</a>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services-section">
+    <div class="container">
+      <h2>Our Services</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="service-card">
+            <h3>Hematology</h3>
+            <p>Comprehensive blood tests including CBC, Hemoglobin A1c, and more.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="service-card">
+            <h3>Biochemistry</h3>
+            <p>Lipid profiles, liver function tests, and kidney function analysis.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="service-card">
+            <h3>Microbiology</h3>
+            <p>Cultures and sensitivity tests for infections and pathogens.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QR Code Section -->
+  <section class="qr-section">
+    <div class="container">
+      <h2>Scan to Learn More</h2>
+      <div id="qrcode"></div>
+      <p>Scan this QR code to visit our services page.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    &copy; 2025 Alpha-Med Clinical Lab. All Rights Reserved. | <a href="/privacy-policy.html">Privacy Policy</a> | ISO 15189 Certified
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    // QR Code for services page
+    new QRCode(document.getElementById("qrcode"), {
+      text: "https://your-site.com/services",
+      width: 128,
+      height: 128
+    });
+  </script>
 </body>
 </html>
