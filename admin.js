@@ -1,29 +1,52 @@
-// ✅ Load all patients in admin panel
+```javascript
 function loadAllPatients() {
-  const patients = getAllPatients();
+  const patients = window.getAllPatients();
   const tbody = document.getElementById("adminPatientList");
+  const errorDiv = document.getElementById("error");
   tbody.innerHTML = "";
 
-  patients.forEach(p => {
+  if (!patients.length) {
+    errorDiv.textContent = "No patients found";
+    return;
+  }
+
+  errorDiv.textContent = "";
+  patients.forEach((p, index) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
+      <td>${p.mrn}</td>
       <td>${p.name}</td>
-      <td>${p.gender}</td>
-      <td>${p.age || ""}</td>
-      <td>${p.phone || ""}</td>
+      <td>${p.cnic}</td>
+      <td>${p.phone || "N/A"}</td>
       <td>${p.department}</td>
-      <td>${(p.tests || []).join(", ")}</td>
-      <td>${(p.date || "").split("T")[0]}</td>
+      <td>${p.tests
+        .map(testId => {
+          const test = Object.values(window.testData).flat().find(t => t.id === testId);
+          return test ? test.name : testId;
+        })
+        .join(", ")}</td>
+      <td>${p.date}</td>
+      <td><button onclick="deletePatient(${index})">Delete</button></td>
     `;
     tbody.appendChild(tr);
   });
 
   if (document.getElementById("searchAdmin")) {
-    attachTableSearch("searchAdmin", "adminPatientTable");
+    window.attachTableSearch("searchAdmin", "adminPatientTable");
   }
 }
 
-// ✅ Auto-load when page opens
+function deletePatient(index) {
+  if (!confirm("Are you sure you want to delete this patient?")) return;
+  const patients = window.getAllPatients();
+  patients.splice(index, 1);
+  localStorage.setItem("patients", JSON.stringify(patients));
+  alert("Patient deleted successfully!");
+  loadAllPatients();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   loadAllPatients();
 });
+```
+
