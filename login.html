@@ -1,38 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - Alpha-Med Clinical Lab</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/png" href="logo.png" />
-  <script defer src="script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Secure login for Alpha-Med Clinical Lab users - Admin, Reception, Technician, and Patients">
+  <meta name="keywords" content="Alpha-Med, login, medical lab, diagnostics, clinical laboratory">
+  <meta name="author" content="Alpha-Med Clinical Lab">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline';">
+  <title>Alpha-Med Clinical Lab | Login</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #e9ecef, #f0f4f7);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-container {
+      max-width: 500px;
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+    .logo {
+      width: 120px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .form-control {
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ced4da;
+    }
+    .form-label {
+      font-weight: 500;
+      color: #2c3e50;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      width: 100%;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .btn-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #007bff;
+      font-size: 0.9em;
+    }
+    .password-wrapper {
+      position: relative;
+    }
+    .error {
+      color: #dc3545;
+      font-size: 0.85em;
+      margin-top: 5px;
+      display: none;
+    }
+    .forgot-password {
+      font-size: 0.9em;
+      color: #007bff;
+      text-decoration: none;
+    }
+    .forgot-password:hover {
+      text-decoration: underline;
+    }
+    .qr-section {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #666;
+    }
+  </style>
 </head>
-<body class="login-body">
-
-  <div class="login-container">
-    <div class="logo-side">
-      <img src="logo.png" alt="Lab Logo" class="logo-img" />
+<body>
+  <div class="login-container" role="main">
+    <img src="logo.png" alt="Alpha-Med Clinical Lab Official Logo" class="logo">
+    <h2 class="mb-4">Sign In to Alpha-Med</h2>
+    <form id="loginForm" aria-label="Login Form" onsubmit="event.preventDefault(); loginUser();">
+      <div class="form-group">
+        <label for="userType" class="form-label">User Type</label>
+        <select class="form-control" id="userType" required aria-describedby="userTypeError">
+          <option value="" disabled selected>Select user type</option>
+          <option value="admin">Admin</option>
+          <option value="reception">Reception</option>
+          <option value="technician">Technician</option>
+          <option value="patient">Patient</option>
+        </select>
+        <div id="userTypeError" class="error">Please select a user type</div>
+      </div>
+      <div class="form-group">
+        <label for="username" class="form-label">Username or Email</label>
+        <input type="text" class="form-control" id="username" placeholder="Enter username or email" required aria-describedby="usernameError">
+        <div id="usernameError" class="error">Please enter a valid username or email</div>
+      </div>
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <div class="password-wrapper">
+          <input type="password" class="form-control" id="password" placeholder="Enter your password" required aria-describedby="passwordError">
+          <button type="button" class="btn-toggle" onclick="togglePassword('password')">Show</button>
+        </div>
+        <div id="passwordError" class="error">Password must be at least 6 characters</div>
+      </div>
+      <button type="submit" class="btn btn-primary">Sign In</button>
+      <p class="text-center mt-3">
+        <a href="change_password.html" class="forgot-password">Forgot Password?</a>
+      </p>
+    </form>
+    <div class="qr-section">
+      <h4>Scan to Register</h4>
+      <div id="qrcode"></div>
+      <p>Scan this QR code to register as a new patient.</p>
     </div>
-
-    <div class="form-side">
-      <h1>Sign In</h1>
-      <form onsubmit="event.preventDefault(); loginUser(document.getElementById('username').value, document.getElementById('password').value);">
-        <div class="form-group">
-          <label>Username</label>
-          <input id="username" type="text" required />
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <div class="password-wrapper">
-            <input id="password" type="password" required />
-            <button type="button" onclick="togglePassword('password')">Show</button>
-          </div>
-        </div>
-        <button class="login-btn" type="submit">Login</button>
-      </form>
+    <div class="footer">
+      &copy; 2025 Alpha-Med Clinical Lab. <a href="/privacy-policy.html">Privacy Policy</a> | ISO 15189 Certified
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    // Toggle Password Visibility
+    function togglePassword(id) {
+      const input = document.getElementById(id);
+      const button = input.nextElementSibling;
+      if (input.type === 'password') {
+        input.type = 'text';
+        button.textContent = 'Hide';
+      } else {
+        input.type = 'password';
+        button.textContent = 'Show';
+      }
+    }
+
+    // QR Code for patient registration
+    new QRCode(document.getElementById("qrcode"), {
+      text: "https://your-site.com/register_patient.html",
+      width: 100,
+      height: 100
+    });
+
+    // Login Function
+    async function loginUser() {
+      const userType = document.getElementById('userType').value;
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const userTypeError = document.getElementById('userTypeError');
+      const usernameError = document.getElementById('usernameError');
+      const passwordError = document.getElementById('passwordError');
+      let valid = true;
+
+      // Reset errors
+      userTypeError.style.display = 'none';
+      usernameError.style.display = 'none';
+      passwordError.style.display = 'none';
+
+      // Validation
+      if (!userType) {
+        userTypeError.style.display = 'block';
+        valid = false;
+      }
+      if (!username || (!username.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) && username.length < 3)) {
+        usernameError.style.display = 'block';
+        valid = false;
+      }
+      if (password.length < 6) {
+        passwordError.style.display = 'block';
+        valid = false;
+      }
+
+      if (valid) {
+        try {
+          // Replace with your actual backend API endpoint
+          const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userType, username, password })
+          });
+          const data = await response.json();
+          if (response.ok) {
+            alert('Login successful! Redirecting...');
+            // Redirect based on user type
+            switch (userType) {
+              case 'admin':
+                window.location.href = 'admin-dashboard.html';
+                break;
+              case 'reception':
+                window.location.href = 'reception_dashboard.html';
+                break;
+              case 'technician':
+                window.location.href = 'technician_dashboard.html';
+                break;
+              case 'patient':
+                window.location.href = 'view_reports.html';
+                break;
+            }
+          } else {
+            alert(data.message || 'Login failed. Please try again.');
+          }
+        } catch (error) {
+          alert('Error connecting to server. Please try again later.');
+          console.error('Login error:', error);
+        }
+      }
+    }
+  </script>
 </body>
 </html>
