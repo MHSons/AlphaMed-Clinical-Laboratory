@@ -4,275 +4,90 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manage Users - Alpha-Med Clinical Lab</title>
+  <title>Admin Dashboard - Alpha-Med Clinical Lab</title>
   <link rel="stylesheet" href="style.css" />
   <script defer src="storage.js"></script>
+  <script defer src="script.js"></script>
 </head>
-<body>
+<body onload="checkLogin('admin')">
   <header>
-    <h1>Manage Users - Alpha-Med Clinical Lab</h1>
+    <h1>Admin Dashboard</h1>
+    <p>Alpha-Med Clinical Lab - Full Access Panel</p>
   </header>
 
   <div class="container">
-    <h2>Add/Edit User</h2>
-    <form id="userForm">
-      <input type="text" id="cnic" placeholder="CNIC (e.g. 34501-1234567-1)" required />
-      <input type="text" id="name" placeholder="Full Name" required />
-      <select id="role" required>
-        <option value="">Select Role</option>
-        <option value="Receptionist">Receptionist</option>
-        <option value="Technician">Technician</option>
-        <option value="Admin">Admin</option>
-      </select>
-      <input type="password" id="password" placeholder="Password" required />
-      <input type="hidden" id="editIndex" />
-      <button type="submit" id="submitButton">Add User</button>
-    </form>
-    <div class="error" id="error"></div>
+    <div class="summary">
+      <h2>System Overview</h2>
+      <div class="summary-stats">
+        <div class="stat-card">
+          <h3>Total Patients</h3>
+          <p id="totalPatients">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Users</h3>
+          <p id="totalUsers">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Test Results</h3>
+          <p id="totalResults">0</p>
+        </div>
+      </div>
+    </div>
 
-    <h3>Search Users</h3>
-    <input type="text" id="searchUser" placeholder="Search by CNIC or Name..." />
-
-    <table id="userTable">
-      <thead>
-        <tr>
-          <th>CNIC</th>
-          <th>Name</th>
-          <th>Role</th>
-          <th>Password</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="userList"></tbody>
-    </table>
+    <div class="dashboard">
+      <div class="card" onclick="location.href='manage_users.html'">
+        <h3>Manage Users</h3>
+        <p>Add, edit, or remove users (Receptionist & Technician)</p>
+      </div>
+      <div class="card" onclick="location.href='register_patient.html'">
+        <h3>Register Patient</h3>
+        <p>Reception module access</p>
+      </div>
+      <div class="card" onclick="location.href='add_test_result.html'">
+        <h3>Enter Test Results</h3>
+        <p>Technician result entry panel</p>
+      </div>
+      <div class="card" onclick="location.href='view_reports.html'">
+        <h3>View Reports</h3>
+        <p>All patient reports overview</p>
+      </div>
+      <div class="card" onclick="checkExportLink()">
+        <h3>Export Data</h3>
+        <p>Export results to Excel or PDF</p>
+      </div>
+      <div class="card" onclick="location.href='settings.html'">
+        <h3>System Settings</h3>
+        <p>Change password, branding, etc.</p>
+      </div>
+    </div>
   </div>
 
   <footer>&copy; 2025 Alpha-Med Clinical Lab</footer>
 
   <script>
-    function loadUsers() {
+    function loadSummary() {
+      const patients = window.getAllPatients();
       const users = window.getAllUsers();
-      const tbody = document.getElementById("userList");
-      const errorDiv = document.getElementById("error");
-      tbody.innerHTML = "";
-
-      if (!users.length) {
-        errorDiv.textContent = "No users found";
-        return;
-      }
-
-      errorDiv.textContent = "";
-      users.forEach((user, index) => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-          <td>${user.cnic}</td>
-          <td>${user.name}</td>
-          <td>${user.role}</td>
-          <td>${"*".repeat(user.password.length)}</td>
-          <td>
-            <button class="btn-primary" onclick="editUser(${index})">Edit</button>
-            <button class="btn-danger" onclick="window.deleteUser(${index}); loadUsers();">Delete</button>
-          </td>
-        `;
-      });
-
-      window.attachTableSearch("searchUser", "userTable");
+      const results = window.getAllResults();
+      document.getElementById("totalPatients").textContent = patients.length;
+      document.getElementById("totalUsers").textContent = users.length;
+      document.getElementById("totalResults").textContent = results.length;
     }
 
-    function editUser(index) {
-      const users = window.getAllUsers();
-      const user = users[index];
-      document.getElementById("cnic").value = user.cnic;
-      document.getElementById("name").value = user.name;
-      document.getElementById("role").value = user.role;
-      document.getElementById("password").value = atob(user.password);
-      document.getElementById("editIndex").value = index;
-      document.getElementById("submitButton").textContent = "Update User";
+    function checkExportLink() {
+      alert("Export functionality is under development.");
     }
 
-    document.getElementById("userForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const cnic = document.getElementById("cnic").value.trim();
-      const name = document.getElementById("name").value.trim();
-      const role = document.getElementById("role").value;
-      const password = document.getElementById("password").value;
-      const editIndex = document.getElementById("editIndex").value;
-      const errorDiv = document.getElementById("error");
-
-      const user = { cnic, name, role, password: btoa(password) };
-      const saved = editIndex ? window.updateUser(parseInt(editIndex), user) : window.addUser(user);
-
-      if (!saved) {
-        errorDiv.textContent = editIndex ? "Error updating user" : "User with this CNIC already exists";
-        return;
-      }
-
-      errorDiv.textContent = "";
-      document.getElementById("userForm").reset();
-      document.getElementById("submitButton").textContent = "Add User";
-      document.getElementById("editIndex").value = "";
-      loadUsers();
-    });
-
-    document.addEventListener("DOMContentLoaded", loadUsers);
+    document.addEventListener("DOMContentLoaded", loadSummary);
   </script>
 </body>
 </html>
 ```
 
-### Updates to `storage.js`
-User management logic ko `storage.js` mein move kar raha hoon taaki code consistent rahe. Yeh previous `storage.js` (artifact ID: `65c5c4d9-0c2c-4606-8b14-e9739b1107d3`) ko extend karta hai, aur `addUser`, `updateUser`, `deleteUser`, aur `getAllUsers` functions add karta hai.
-
-<xaiArtifact artifact_id="cc9c9d8a-edca-495a-9bc6-6fdc9b8b5fe3" artifact_version_id="840dfa64-ac9a-46ef-ad4f-73c3dbabc253" title="storage.js" contentType="application/javascript">
-```javascript
-function savePatient(patient) {
-  try {
-    let patients = JSON.parse(localStorage.getItem("patients") || "[]");
-    if (patients.some(p => p.cnic === patient.cnic)) {
-      if (!confirm("Patient with this CNIC is already registered. Do you want to add again?")) {
-        return false;
-      }
-    }
-    patients.push(patient);
-    localStorage.setItem("patients", JSON.stringify(patients));
-    return true;
-  } catch (err) {
-    console.error("Error saving patient:", err);
-    return false;
-  }
-}
-
-function getAllPatients() {
-  try {
-    return JSON.parse(localStorage.getItem("patients") || "[]");
-  } catch (err) {
-    console.error("Error reading patients:", err);
-    return [];
-  }
-}
-
-function saveTestResult(result) {
-  try {
-    let results = JSON.parse(localStorage.getItem("results") || "[]");
-    results.push(result);
-    localStorage.setItem("results", JSON.stringify(results));
-    return true;
-  } catch (err) {
-    console.error("Error saving test result:", err);
-    return false;
-  }
-}
-
-function getAllResults() {
-  try {
-    return JSON.parse(localStorage.getItem("results") || "[]");
-  } catch (err) {
-    console.error("Error reading results:", err);
-    return [];
-  }
-}
-
-function addUser(user) {
-  try {
-    let users = JSON.parse(localStorage.getItem("users") || "[]");
-    if (users.some(u => u.cnic === user.cnic)) {
-      return false;
-    }
-    if (!/^\d{5}-\d{7}-\d{1}$/.test(user.cnic)) {
-      return false;
-    }
-    users.push(user);
-    localStorage.setItem("users", JSON.stringify(users));
-    return true;
-  } catch (err) {
-    console.error("Error adding user:", err);
-    return false;
-  }
-}
-
-function updateUser(index, user) {
-  try {
-    let users = JSON.parse(localStorage.getItem("users") || "[]");
-    if (index < 0 || index >= users.length) {
-      return false;
-    }
-    if (!/^\d{5}-\d{7}-\d{1}$/.test(user.cnic)) {
-      return false;
-    }
-    if (users.some((u, i) => i !== index && u.cnic === user.cnic)) {
-      return false;
-    }
-    users[index] = user;
-    localStorage.setItem("users", JSON.stringify(users));
-    return true;
-  } catch (err) {
-    console.error("Error updating user:", err);
-    return false;
-  }
-}
-
-function deleteUser(index) {
-  try {
-    let users = JSON.parse(localStorage.getItem("users") || "[]");
-    if (index < 0 || index >= users.length) {
-      return false;
-    }
-    users.splice(index, 1);
-    localStorage.setItem("users", JSON.stringify(users));
-    return true;
-  } catch (err) {
-    console.error("Error deleting user:", err);
-    return false;
-  }
-}
-
-function getAllUsers() {
-  try {
-    return JSON.parse(localStorage.getItem("users") || "[]");
-  } catch (err) {
-    console.error("Error reading users:", err);
-    return [];
-  }
-}
-
-function clearAllPatients() {
-  if (confirm("Are you sure you want to delete all patients?")) {
-    localStorage.removeItem("patients");
-    localStorage.removeItem("results");
-    alert("All patients and results cleared!");
-  }
-}
-
-function validateUser(username, password) {
-  try {
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    return users.some(user => user.cnic === username && user.password === btoa(password));
-  } catch (err) {
-    console.error("Error validating user:", err);
-    return false;
-  }
-}
-
-function attachTableSearch(inputId, tableId) {
-  const input = document.getElementById(inputId);
-  const table = document.getElementById(tableId);
-  if (!input || !table) return;
-  input.addEventListener("keyup", function () {
-    const filter = input.value.toLowerCase();
-    const rows = table.getElementsByTagName("tr");
-    for (let i = 0; i < rows.length; i++) {
-      if (rows[i].getElementsByTagName("th").length > 0) continue;
-      const rowText = rows[i].textContent.toLowerCase();
-      rows[i].style.display = rowText.includes(filter) ? "" : "none";
-    }
-  });
-}
-```
-
 ### Updates to `style.css`
-Inline CSS ko `style.css` mein merge kar raha hoon taaki styling consistent rahe. Yeh previous `style.css` (artifact ID: `7d93e7b8-1978-4c3a-b15f-b95c9052ab06`) ko extend karta hai.
+Inline CSS ko `style.css` mein merge kar raha hoon taaki styling consistent rahe. Yeh previous `style.css` (artifact ID: `ea3110c4-2e45-4fa2-b461-e1075636e0c4`) ko extend karta hai, aur summary section ke liye `.summary` aur `.stat-card` styles add karta hai.
 
-<xaiArtifact artifact_id="ea3110c4-2e45-4fa2-b461-e1075636e0c4" artifact_version_id="de0b3d2b-e38e-4315-89d9-4234d64ff016" title="style.css" contentType="text/css">
+<xaiArtifact artifact_id="204d132e-63e4-41d0-ab9a-1f49afe5df8a" artifact_version_id="4a15a414-7df6-4037-a41f-38a4715a01d8" title="style.css" contentType="text/css">
 ```css
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
@@ -376,6 +191,24 @@ h1, h2, h3, h4 {
 .card p {
     color: #888;
     font-size: 14px;
+}
+
+.summary {
+    margin-bottom: 30px;
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .patient-list, .result-form, .form-section, .table-section {
