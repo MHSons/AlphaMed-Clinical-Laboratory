@@ -1,0 +1,61 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report - Alpha-Med Clinical Lab</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Patient Report - Alpha-Med Clinical Lab</h1>
+  </header>
+
+  <div class="container report-container">
+    <h2>Patient Report</h2>
+    <div id="reportDetails"></div>
+    <div class="qr">
+      <h3>QR Code for Report</h3>
+      <div id="qrCode"></div>
+    </div>
+  </div>
+
+  <footer>&copy; 2025 Alpha-Med Clinical Lab</footer>
+
+  <script src="https://unpkg.com/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script src="test-data.js"></script>
+  <script src="qr-generator.js"></script>
+  <script>
+    function loadReport() {
+      const report = JSON.parse(localStorage.getItem("latestReport") || "{}");
+      const detailsDiv = document.getElementById("reportDetails");
+      const qrCodeContainer = document.getElementById("qrCode");
+
+      if (!report.mrn) {
+        detailsDiv.innerHTML = '<div class="error">No report data found</div>';
+        return;
+      }
+
+      const test = Object.values(window.testData).flat().find(t => t.id === report.testId);
+      detailsDiv.innerHTML = `
+        <div class="info-row"><span>MRN:</span> ${report.mrn}</div>
+        <div class="info-row"><span>Name:</span> ${report.name}</div>
+        <div class="info-row"><span>CNIC:</span> ${report.cnic}</div>
+        <div class="info-row"><span>Phone:</span> ${report.phone}</div>
+        <div class="info-row"><span>Department:</span> ${report.department}</div>
+        <div class="info-row"><span>Test:</span> ${test ? test.name : report.testName}</div>
+        <div class="info-row"><span>Normal Range:</span> ${test ? test.normalRange : "N/A"}</div>
+        <div class="info-row"><span>Result:</span> <span style="font-weight: bold;">${report.result}</span></div>
+        <div class="info-row"><span>Date:</span> ${report.date}</div>
+      `;
+
+      const qrData = `MRN: ${report.mrn} | Test: ${test ? test.name : report.testName} | Result: ${report.result}`;
+      generateQRCode(qrData, "qrCode");
+    }
+
+    document.addEventListener("DOMContentLoaded", loadReport);
+  </script>
+</body>
+</html>
+```
