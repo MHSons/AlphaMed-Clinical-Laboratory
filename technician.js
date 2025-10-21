@@ -1,76 +1,93 @@
-// ✅ Load patients for technician
-function loadTechPatients() {
-  const patients = getAllPatients();
-  const tbody = document.getElementById("techPatientList");
+// technician.js — controls the technician dashboard actions
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadTechnicianTests();
+});
+
+// Load all tests assigned to this technician
+function loadTechnicianTests() {
+  const user = getLoggedInUser();
+  if (!user || user.role !== "technician") {
+    alert("Access denied! Only technicians can view this page.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const tests = getAllTests();
+  const tbody = document.getElementById("techTests");
   tbody.innerHTML = "";
 
-  patients.forEach((p, idx) => {
+  const assignedTests = tests.filter(t => t.technician === user.username);
+
+  if (assignedTests.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='6'>No tests assigned yet.</td></tr>";
+    return;
+  }
+
+  assignedTests.forEach((test, index) => {
     const tr = document.createElement("tr");
-
-    // Tests with input fields
-    let testInputs = "";
-    if (p.tests && p.tests.length > 0) {
-      p.tests.forEach(t => {
-        // Normal range from test-data.js
-        let range = "";
-        for (let dept in testData) {
-          const testObj = testData[dept].find(x => x.name === t);
-          if (testObj) {
-            range = testObj.normalRange;
-            break;
-          }
-        }
-
-        const resultValue = p.results && p.results[t] ? p.results[t] : "";
-
-        testInputs += `
-          <div style="margin-bottom:5px;">
-            <label><strong>${t}</strong> (Normal: ${range})</label><br/>
-            <input type="text" id="res_${p.id}_${t}" value="${resultValue}" placeholder="Enter result">
-          </div>
-        `;
-      });
-    } else {
-      testInputs = "<em>No tests selected</em>";
-    }
-
     tr.innerHTML = `
-      <td>${p.name}</td>
-      <td>${p.department}</td>
-      <td>${(p.tests || []).join(", ")}</td>
+      <td>${test.patientName}</td>
+      <td>${test.testName}</td>
+      <td>${test.sampleType}</td>
+      <td class="${test.status === "Completed" ? "status-done" : "status-pending"}">${test.status}</td>
+      <td>${test.result ? test.result : "-"}</td>
       <td>
-        ${testInputs}
-        <button class="btn-save" onclick="saveResults(${p.id})">Save</button>
+        ${
+          test.status === "Completed"
+            ? `<button class="btn-small btn-outline" disabled>Done</button>`
+            : `<button class="btn-small" onclick="openResultModal(${index})">Add Result</button>`
+        }
       </td>
     `;
     tbody.appendChild(tr);
   });
+}
 
-  if (document.getElementById("searchTech")) {
-    attachTableSearch("searchTech", "techPatientTable");
+// Open modal to enter result
+function openResultModal(index) {
+  document.getElementById("selectedIndex").value = index;
+  document.getElementById("resultModal").style.display = "flex";
+}
+
+// Close result modal
+function closeModal() {
+  document.getElementById("resultModal").style.display = "none";
+}
+
+// Save the result entered by the technician
+function saveTestResult() {
+  const index = document.getElementById("selectedIndex").value;
+  const result = document.getElementById("testResult").value.trim();
+
+  if (!result) {
+    alert("Please enter a valid test result!");
+    return;
   }
+
+  const tests = getAllTests();
+  const user = getLoggedInUser();
+  const assignedTests = tests.filter(t => t.technician === user.username);
+
+  if (!assignedTests[index]) {
+    alert("Invalid test selection!");
+    closeModal();
+    return;
+  }
+
+  // Find the global test index in all tests
+  const globalIndex = tests.findIndex(
+    t =>
+      t.patientName === assignedTests[index].patientName &&
+      t.testName === assignedTests[index].testName
+  );
+
+  tests[globalIndex].result = result;
+  tests[globalIndex].status = "Completed";
+
+  saveAllTests(tests);
+  alert("Test result saved successfully!");
+  document.getElementById("testResult").value = "";
+  closeModal();
+  loadTechnicianTests();
 }
-
-// ✅ Save technician results
-function saveResults(patientId) {
-  let patients = getAllPatients();
-  const patient = patients.find(p => p.id === patientId);
-  if (!patient) return;
-
-  if (!patient.results) patient.results = {};
-
-  (patient.tests || []).forEach(t => {
-    const input = document.getElementById(`res_${patientId}_${t}`);
-    if (input) {
-      patient.results[t] = input.value.trim();
-    }
-  });
-
-  localStorage.setItem("patients", JSON.stringify(patients));
-  alert("Results saved successfully!");
-}
-
-// ✅ Auto-load on page open
-document.addEventListener("DOMContentLoaded", () => {
-  loadTechPatients();
-});
