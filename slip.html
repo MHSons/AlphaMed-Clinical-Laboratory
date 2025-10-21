@@ -3,129 +3,98 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Patient Test Slip — Prime Medical Lab</title>
+  <title>Patient Slip — Prime Medical Lab</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="logo.png" />
   <style>
-    .slip-wrapper {
+    .container {
       max-width: 600px;
       margin: 30px auto;
       background: #fff;
-      border: 2px solid #0078d7;
+      padding: 25px 30px;
       border-radius: 12px;
-      padding: 20px 30px;
-      font-family: "Segoe UI", sans-serif;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .slip-header {
+    h2, h3 {
       text-align: center;
-      border-bottom: 2px solid #0078d7;
-      margin-bottom: 15px;
-      padding-bottom: 5px;
     }
-    .slip-header img {
-      height: 60px;
+    .info {
+      margin-top: 20px;
     }
-    .slip-header h2 {
-      margin: 5px 0;
+    .info div {
+      margin-bottom: 10px;
     }
-    .slip-header p {
-      font-size: 13px;
-      color: #555;
+    .label {
+      font-weight: bold;
+      color: #333;
+      display: inline-block;
+      width: 140px;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    td {
-      padding: 6px 8px;
-      border-bottom: 1px dotted #ccc;
-    }
-    .qr {
+    .actions {
       text-align: center;
       margin-top: 20px;
     }
-    .slip-footer {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 13px;
-      color: #555;
-    }
-    .no-print {
+    #qrCode {
       text-align: center;
       margin-top: 20px;
     }
     @media print {
-      .no-print { display: none; }
+      .actions { display: none; }
       body { background: white; }
+      .container { box-shadow: none; }
     }
   </style>
 </head>
 <body>
-  <div class="slip-wrapper" id="slipWrapper">
-    <div class="slip-header">
-      <img src="logo.png" alt="Lab Logo" />
-      <h2>Prime Medical Diagnostic Laboratory</h2>
-      <p>ISO 15189:2022 Certified — Lahore, Pakistan</p>
+  <div class="container" id="slipContainer">
+    <img src="logo.png" alt="Lab Logo" style="display:block;margin:0 auto;width:100px;">
+    <h2>Prime Medical Diagnostic Laboratory</h2>
+    <h3>Patient Registration Slip</h3>
+    <hr>
+
+    <div class="info" id="patientInfo">
+      <!-- Patient details will load here -->
     </div>
 
-    <table>
-      <tr><td><strong>Patient ID:</strong></td><td id="pid"></td></tr>
-      <tr><td><strong>Name:</strong></td><td id="pname"></td></tr>
-      <tr><td><strong>Age:</strong></td><td id="page"></td></tr>
-      <tr><td><strong>Gender:</strong></td><td id="pgender"></td></tr>
-      <tr><td><strong>Contact:</strong></td><td id="pcontact"></td></tr>
-      <tr><td><strong>Test Type:</strong></td><td id="ptest"></td></tr>
-      <tr><td><strong>Technician:</strong></td><td id="ptech"></td></tr>
-      <tr><td><strong>Date Completed:</strong></td><td id="pdate"></td></tr>
-    </table>
+    <div id="qrCode"></div>
 
-    <div class="qr">
-      <canvas id="qrCanvas"></canvas>
-    </div>
-
-    <div class="slip-footer">
-      <p>For verification, scan the QR code or visit Prime Medical Lab website.</p>
-      <p>Thank you for trusting Prime Medical Lab.</p>
+    <div class="actions">
+      <button class="btn" onclick="window.print()">🖨️ Print Slip</button>
+      <button class="btn btn-outline" onclick="window.close()">Close</button>
     </div>
   </div>
 
-  <div class="no-print">
-    <button onclick="window.print()" class="btn">Print Slip</button>
-    <button onclick="window.location.href='view_reports.html'" class="btn btn-outline">Back</button>
-  </div>
-
-  <!-- JS -->
   <script src="storage.js"></script>
   <script src="qr-generator.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const id = localStorage.getItem("currentReportId");
-      if (!id) {
-        alert("No report selected!");
-        window.location.href = "view_reports.html";
+      const urlParams = new URLSearchParams(window.location.search);
+      const patientId = urlParams.get("id");
+      if (!patientId) {
+        document.getElementById("patientInfo").innerHTML = "<p>No patient ID found.</p>";
         return;
       }
 
-      const patient = getPatients().find(p => p.id == id);
-      if (!patient || !patient.result) {
-        alert("No result data found for this patient.");
-        window.location.href = "view_reports.html";
+      const patient = getAllPatients().find(p => p.id === patientId);
+      if (!patient) {
+        document.getElementById("patientInfo").innerHTML = "<p>Patient record not found.</p>";
         return;
       }
 
-      document.getElementById("pid").textContent = patient.id;
-      document.getElementById("pname").textContent = patient.name;
-      document.getElementById("page").textContent = patient.age;
-      document.getElementById("pgender").textContent = patient.gender;
-      document.getElementById("pcontact").textContent = patient.contact;
-      document.getElementById("ptest").textContent = patient.testType;
-      document.getElementById("ptech").textContent = patient.result.technician || "-";
-      document.getElementById("pdate").textContent = patient.result.completedAt || "-";
+      const info = `
+        <div><span class="label">Patient ID:</span> ${patient.id}</div>
+        <div><span class="label">Name:</span> ${patient.name}</div>
+        <div><span class="label">Age:</span> ${patient.age}</div>
+        <div><span class="label">Gender:</span> ${patient.gender}</div>
+        <div><span class="label">Test:</span> ${patient.testName}</div>
+        <div><span class="label">Technician:</span> ${patient.technician}</div>
+        <div><span class="label">Status:</span> ${patient.testStatus}</div>
+        <div><span class="label">Date:</span> ${patient.date}</div>
+      `;
+      document.getElementById("patientInfo").innerHTML = info;
 
-      // Generate QR code for verification
-      const qrData = `Patient: ${patient.name}\nTest: ${patient.testType}\nResult: Completed\nID: ${patient.id}`;
-      generateQRCode("qrCanvas", qrData);
+      // Generate QR Code (optional)
+      generateQRCode(patient.id, "qrCode");
     });
   </script>
 </body>
