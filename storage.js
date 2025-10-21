@@ -1,16 +1,12 @@
-// ✅ Save new patient into localStorage
+```javascript
 function savePatient(patient) {
   try {
     let patients = JSON.parse(localStorage.getItem("patients") || "[]");
 
-    // Duplicate check: same name + same date
-    const exists = patients.some(
-      p => p.name.toLowerCase() === patient.name.toLowerCase() &&
-           (p.date || "").split("T")[0] === (patient.date || "").split("T")[0]
-    );
+    const exists = patients.some(p => p.cnic === patient.cnic);
 
     if (exists) {
-      if (!confirm("Patient with same name already exists today. Do you want to add again?")) {
+      if (!confirm("Patient with this CNIC is already registered. Do you want to add again?")) {
         return false;
       }
     }
@@ -24,7 +20,6 @@ function savePatient(patient) {
   }
 }
 
-// ✅ Get all patients
 function getAllPatients() {
   try {
     return JSON.parse(localStorage.getItem("patients") || "[]");
@@ -34,7 +29,6 @@ function getAllPatients() {
   }
 }
 
-// ✅ Clear all patients (use carefully)
 function clearAllPatients() {
   if (confirm("Are you sure you want to delete all patients?")) {
     localStorage.removeItem("patients");
@@ -42,7 +36,16 @@ function clearAllPatients() {
   }
 }
 
-// ✅ Table search utility
+function validateUser(username, password) {
+  try {
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    return users.some(user => user.username === username && user.password === password);
+  } catch (err) {
+    console.error("Error validating user:", err);
+    return false;
+  }
+}
+
 function attachTableSearch(inputId, tableId) {
   const input = document.getElementById(inputId);
   const table = document.getElementById(tableId);
@@ -52,9 +55,11 @@ function attachTableSearch(inputId, tableId) {
     const filter = input.value.toLowerCase();
     const rows = table.getElementsByTagName("tr");
 
-    for (let i = 1; i < rows.length; i++) {
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].getElementsByTagName("th").length > 0) continue;
       const rowText = rows[i].textContent.toLowerCase();
       rows[i].style.display = rowText.includes(filter) ? "" : "none";
     }
   });
 }
+```
