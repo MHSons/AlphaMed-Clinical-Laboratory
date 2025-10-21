@@ -1,4 +1,4 @@
-// Utility function to generate unique IDs (from script.js)
+// Utility function to generate unique IDs
 function generateId(prefix = "TEST") {
   return prefix + "_" + Math.random().toString(36).substr(2, 9);
 }
@@ -237,4 +237,5 @@ window.testData = {
     { id: generateId(), name: "Dengue Virus Serotyping", parameter: "report", normalRange: "Reference", description: "Identifies dengue serotypes", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "48 hours", qrCodeLink: "https://alpha-med.com/tests/dengue-serotyping" },
     { id: generateId(), name: "Zika Virus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects Zika virus", sampleType: "Blood/Urine", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/zika-pcr-virology" },
     { id: generateId(), name: "Chikungunya Virus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects chikungunya virus", sampleType: "Blood", preparation: "No fasting required", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/chikungunya-pcr" },
-    { id: generateId(), name: "West Nile Virus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects West Nile virus", sampleType: "Blood/CSF", preparation: "Physician collection", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/wnv-pcr"
+    { id: generateId(), name: "West Nile Virus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects West Nile virus", sampleType: "Blood/CSF", preparation: "Physician collection", turnaroundTime: "24 hours", qrCodeLink: "https://alpha-med.com/tests/wnv-pcr" },
+    { id: generateId(), name: "Hantavirus PCR", parameter: "qualitative", normalRange: "Negative", description: "Detects hantavirus infection", sampleType: "Blood", preparation: "No fasting required", turnaround
