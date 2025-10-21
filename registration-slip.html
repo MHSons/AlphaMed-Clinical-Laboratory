@@ -1,80 +1,109 @@
-```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registration Slip - Alpha-Med Clinical Lab</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Patient Registration Slip — Prime Medical Lab</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="logo.png" />
+  <style>
+    .slip-container {
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #fff;
+      border: 2px solid #0078d7;
+      border-radius: 12px;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .slip-header {
+      text-align: center;
+      border-bottom: 2px solid #0078d7;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+    }
+    .slip-header img {
+      height: 60px;
+    }
+    .slip-header h2 {
+      margin: 5px 0;
+    }
+    .slip-header p {
+      font-size: 13px;
+      color: #666;
+      margin: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    td {
+      padding: 5px 8px;
+      border-bottom: 1px dotted #ccc;
+    }
+    .slip-footer {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 13px;
+      color: #555;
+    }
+    @media print {
+      .no-print { display: none; }
+      body { background: white; }
+    }
+  </style>
 </head>
-<body onload="loadSlip()">
-  <div class="container slip-container">
-    <div class="header">
+<body>
+  <div class="slip-container" id="slipContainer">
+    <div class="slip-header">
       <img src="logo.png" alt="Lab Logo" />
-      <h2>Alpha-Med Clinical Lab</h2>
-      <p>Patient Registration Slip</p>
+      <h2>Prime Medical Diagnostic Laboratory</h2>
+      <p>ISO 15189:2022 Certified — Lahore, Pakistan</p>
     </div>
 
-    <div id="patientDetails">
-      <div class="info-row"><span>MRN:</span> <span id="mrn"></span></div>
-      <div class="info-row"><span>Name:</span> <span id="name"></span></div>
-      <div class="info-row"><span>CNIC:</span> <span id="cnic"></span></div>
-      <div class="info-row"><span>Phone:</span> <span id="phone"></span></div>
-      <div class="info-row"><span>Department:</span> <span id="department"></span></div>
-      <div class="info-row"><span>Tests:</span> <span id="tests"></span></div>
-      <div class="info-row"><span>Date:</span> <span id="date"></span></div>
-      <div class="error" id="error"></div>
-    </div>
+    <table>
+      <tr><td><strong>Patient ID:</strong></td><td id="pid"></td></tr>
+      <tr><td><strong>Name:</strong></td><td id="pname"></td></tr>
+      <tr><td><strong>Age:</strong></td><td id="page"></td></tr>
+      <tr><td><strong>Gender:</strong></td><td id="pgender"></td></tr>
+      <tr><td><strong>Contact:</strong></td><td id="pcontact"></td></tr>
+      <tr><td><strong>Test Type:</strong></td><td id="ptest"></td></tr>
+      <tr><td><strong>Date:</strong></td><td id="pdate"></td></tr>
+    </table>
 
-    <div class="qr">
-      <h3>QR Codes</h3>
-      <div id="qrCodes"></div>
+    <div class="slip-footer">
+      <p>Thank you for choosing Prime Medical Lab</p>
+      <p>Please bring this slip when collecting your report</p>
     </div>
   </div>
 
-  <p class="no-print" style="text-align:center; color:#777; font-size:14px; margin-top:20px;">
-    This slip will automatically print. If not, press Ctrl+P or use your browser's print option.
-  </p>
+  <div class="no-print" style="text-align:center; margin:20px;">
+    <button onclick="window.print()" class="btn">Print Slip</button>
+    <button onclick="window.location.href='reception_dashboard.html'" class="btn btn-outline">Back</button>
+  </div>
 
-  <footer>&copy; 2025 Alpha-Med Clinical Lab</footer>
-
-  <script src="https://unpkg.com/qrcode@1.5.1/build/qrcode.min.js"></script>
-  <script src="test-data.js"></script>
-  <script src="qr-generator.js"></script>
+  <!-- JS -->
+  <script src="storage.js"></script>
+  <script src="script.js"></script>
   <script>
-    function loadSlip() {
-      const patient = JSON.parse(localStorage.getItem("latestPatient") || "{}");
-      const patientDetails = document.getElementById("patientDetails");
-      const qrCodesContainer = document.getElementById("qrCodes");
-      const errorDiv = document.getElementById("error");
-
-      if (!patient.mrn) {
-        errorDiv.textContent = "No patient data found";
+    document.addEventListener("DOMContentLoaded", () => {
+      const patients = getPatients();
+      if (patients.length === 0) {
+        alert("No patients registered yet!");
+        window.location.href = "register_patient.html";
         return;
       }
 
-      // Display patient details
-      document.getElementById("mrn").textContent = patient.mrn;
-      document.getElementById("name").textContent = patient.name;
-      document.getElementById("cnic").textContent = patient.cnic;
-      document.getElementById("phone").textContent = patient.phone;
-      document.getElementById("department").textContent = patient.department;
-      document.getElementById("tests").textContent = patient.tests
-        .map(testId => {
-          const test = Object.values(window.testData).flat().find(t => t.id === testId);
-          return test ? test.name : testId;
-        })
-        .join(", ");
-      document.getElementById("date").textContent = patient.date;
-
-      // Generate QR codes for MRN and test links
-      const qrData = [patient.mrn, ...patient.tests.map(testId => {
-        const test = Object.values(window.testData).flat().find(t => t.id === testId);
-        return test ? test.qrCodeLink : "";
-      }).filter(link => link)];
-      generateMultipleQRCodes(qrData, "qrCodes");
-    }
+      const patient = patients[patients.length - 1]; // latest
+      document.getElementById("pid").textContent = patient.id;
+      document.getElementById("pname").textContent = patient.name;
+      document.getElementById("page").textContent = patient.age;
+      document.getElementById("pgender").textContent = patient.gender;
+      document.getElementById("pcontact").textContent = patient.contact;
+      document.getElementById("ptest").textContent = patient.testType;
+      document.getElementById("pdate").textContent = patient.registeredAt;
+    });
   </script>
 </body>
 </html>
-```
