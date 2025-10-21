@@ -1,112 +1,142 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>System Settings - Alpha-Med Clinical Lab</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Settings — Prime Medical Lab</title>
   <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
+  <link rel="icon" href="logo.png" />
+  <style>
+    .settings-container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .settings-container h2 {
+      margin-bottom: 15px;
+      border-bottom: 2px solid #0078d7;
+      padding-bottom: 5px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h2>System Settings</h2>
-    <button onclick="logout()">Logout</button>
+  <header class="topbar">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+      <h2>Lab Settings</h2>
+      <button class="btn btn-small" onclick="logout()">Logout</button>
+    </div>
   </header>
 
-  <main class="container">
-    <div class="card">
-      <h3>Update Lab Information</h3>
-      <form id="labInfoForm">
-        <label>Lab Name</label>
-        <input type="text" id="labName" required />
-
-        <label>Email Address</label>
-        <input type="email" id="labEmail" required />
-
-        <label>Contact Number</label>
-        <input type="text" id="labContact" required />
-
-        <button type="submit">Save Settings</button>
-      </form>
+  <div class="settings-container">
+    <h2>General Lab Info</h2>
+    <div class="form-group">
+      <label for="labName">Lab Name</label>
+      <input type="text" id="labName" placeholder="Enter lab name" />
     </div>
-
-    <div class="card">
-      <h3>Change Password</h3>
-      <form id="passwordForm">
-        <label>Old Password</label>
-        <input type="password" id="oldPassword" required />
-
-        <label>New Password</label>
-        <input type="password" id="newPassword" required />
-
-        <label>Confirm New Password</label>
-        <input type="password" id="confirmPassword" required />
-
-        <button type="submit">Change Password</button>
-      </form>
+    <div class="form-group">
+      <label for="labAddress">Address</label>
+      <textarea id="labAddress" placeholder="Enter lab address"></textarea>
     </div>
-  </main>
+    <div class="form-group">
+      <label for="labContact">Contact Info</label>
+      <input type="text" id="labContact" placeholder="Enter phone or email" />
+    </div>
+    <div class="btn-group">
+      <button class="btn" onclick="saveLabSettings()">Save Settings</button>
+    </div>
+  </div>
 
+  <div class="settings-container">
+    <h2>Change Admin Password</h2>
+    <div class="form-group">
+      <label for="oldPass">Old Password</label>
+      <input type="password" id="oldPass" placeholder="Enter old password" />
+    </div>
+    <div class="form-group">
+      <label for="newPass">New Password</label>
+      <input type="password" id="newPass" placeholder="Enter new password" />
+    </div>
+    <div class="form-group">
+      <label for="confirmPass">Confirm New Password</label>
+      <input type="password" id="confirmPass" placeholder="Confirm new password" />
+    </div>
+    <div class="btn-group">
+      <button class="btn" onclick="changeAdminPassword()">Change Password</button>
+    </div>
+  </div>
+
+  <script src="storage.js"></script>
+  <script src="script.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const labInfoForm = document.getElementById("labInfoForm");
-      const passwordForm = document.getElementById("passwordForm");
-
-      // Load existing lab info
-      const savedInfo = JSON.parse(localStorage.getItem("labSettings")) || {};
-      document.getElementById("labName").value = savedInfo.labName || "Alpha-Med Clinical Lab";
-      document.getElementById("labEmail").value = savedInfo.labEmail || "info@alphamedlab.com";
-      document.getElementById("labContact").value = savedInfo.labContact || "0300-0000000";
-
-      labInfoForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const labName = document.getElementById("labName").value;
-        const labEmail = document.getElementById("labEmail").value;
-        const labContact = document.getElementById("labContact").value;
-
-        const data = { labName, labEmail, labContact };
-        localStorage.setItem("labSettings", JSON.stringify(data));
-        showAlert("Lab information updated successfully!", "success");
-      });
-
-      passwordForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const user = JSON.parse(localStorage.getItem("loggedInUser"));
-        const oldPass = document.getElementById("oldPassword").value;
-        const newPass = document.getElementById("newPassword").value;
-        const confirmPass = document.getElementById("confirmPassword").value;
-
-        if (!user || user.password !== oldPass) {
-          showAlert("Old password is incorrect.", "error");
-          return;
-        }
-
-        if (newPass !== confirmPass) {
-          showAlert("New passwords do not match.", "error");
-          return;
-        }
-
-        // Update password in user list
-        let users = JSON.parse(localStorage.getItem("users")) || [];
-        users = users.map(u => {
-          if (u.cnic === user.cnic) {
-            u.password = newPass;
-          }
-          return u;
-        });
-        localStorage.setItem("users", JSON.stringify(users));
-
-        // Update password in session
-        user.password = newPass;
-        localStorage.setItem("loggedInUser", JSON.stringify(user));
-
-        showAlert("Password changed successfully!", "success");
-
-        passwordForm.reset();
-      });
+      const settings = getLabSettings();
+      if (settings) {
+        document.getElementById("labName").value = settings.name || "";
+        document.getElementById("labAddress").value = settings.address || "";
+        document.getElementById("labContact").value = settings.contact || "";
+      }
     });
+
+    function saveLabSettings() {
+      const name = document.getElementById("labName").value.trim();
+      const address = document.getElementById("labAddress").value.trim();
+      const contact = document.getElementById("labContact").value.trim();
+
+      if (!name || !address || !contact) {
+        alert("All fields are required!");
+        return;
+      }
+
+      const settings = { name, address, contact };
+      setLabSettings(settings);
+      alert("Lab settings saved successfully!");
+    }
+
+    function changeAdminPassword() {
+      const oldPass = document.getElementById("oldPass").value.trim();
+      const newPass = document.getElementById("newPass").value.trim();
+      const confirmPass = document.getElementById("confirmPass").value.trim();
+
+      if (!oldPass || !newPass || !confirmPass) {
+        alert("Please fill all password fields!");
+        return;
+      }
+      if (newPass !== confirmPass) {
+        alert("New passwords do not match!");
+        return;
+      }
+
+      const result = updateAdminPassword(oldPass, newPass);
+      if (result) {
+        alert("Password updated successfully!");
+        document.getElementById("oldPass").value = "";
+        document.getElementById("newPass").value = "";
+        document.getElementById("confirmPass").value = "";
+      } else {
+        alert("Old password is incorrect!");
+      }
+    }
   </script>
 </body>
 </html>
