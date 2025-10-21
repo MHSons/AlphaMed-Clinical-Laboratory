@@ -1,54 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Technician Panel - Alpha-Med Lab</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Technician Panel — Prime Medical Lab</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- ✅ Script order -->
-  <script defer src="test-data.js"></script>
-  <script defer src="storage.js"></script>
-  <script defer src="script.js"></script>
-  <script defer src="technician.js"></script>
-
+  <link rel="icon" href="logo.png" />
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background:#f4f4f9; margin:0; padding:20px; }
     .container {
-      max-width: 1100px; margin:auto; background:white;
-      padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.2);
+      max-width: 1100px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    h2 { margin-bottom: 20px; }
-    table { width:100%; border-collapse: collapse; margin-top:15px; }
-    th, td { border:1px solid #ccc; padding:8px; text-align:left; }
-    th { background:#28a745; color:white; }
-    tr:nth-child(even) { background:#f9f9f9; }
-    input[type=text] { width:100%; padding:6px; border:1px solid #ccc; border-radius:4px; }
-    button { padding:8px 15px; margin:5px; border:none; border-radius:5px; cursor:pointer; }
-    .btn-save { background:#28a745; color:white; }
-    .btn-logout { background:#dc3545; color:white; }
+    h2 {
+      color: #0078d7;
+      border-bottom: 2px solid #0078d7;
+      padding-bottom: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+    }
+    th {
+      background: #0078d7;
+      color: #fff;
+    }
+    .status-pending {
+      color: #d17b00;
+      font-weight: bold;
+    }
+    .status-done {
+      color: green;
+      font-weight: bold;
+    }
+    .btn-small {
+      font-size: 0.9em;
+      padding: 5px 10px;
+    }
+    .top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
-<body onload="checkLogin('technician')">
+<body>
+  <header class="topbar">
+    <div class="container top-actions">
+      <h2>Technician Dashboard</h2>
+      <div>
+        <button class="btn btn-small" onclick="window.location.href='change_password.html'">Change Password</button>
+        <button class="btn btn-small btn-outline" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
   <div class="container">
-    <h2>Technician Panel - Alpha-Med Lab</h2>
-    <button class="btn-logout" onclick="logoutUser()">Logout</button>
-
-    <hr />
-
-    <h3>Patient List</h3>
-    <input id="searchTech" placeholder="Search patient..." style="width:100%; padding:8px;" />
-
-    <table id="techPatientTable">
+    <h3>Assigned Tests</h3>
+    <table>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Dept</th>
-          <th>Tests</th>
-          <th>Enter Results</th>
+          <th>Patient</th>
+          <th>Test Name</th>
+          <th>Sample Type</th>
+          <th>Status</th>
+          <th>Result</th>
+          <th>Action</th>
         </tr>
       </thead>
-      <tbody id="techPatientList"></tbody>
+      <tbody id="techTests"></tbody>
     </table>
   </div>
+
+  <!-- Result Modal -->
+  <div id="resultModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h3>Enter Test Result</h3>
+      <input type="hidden" id="selectedIndex" />
+      <div class="form-group">
+        <label for="testResult">Result</label>
+        <textarea id="testResult" placeholder="Enter test findings..." rows="4" style="width:100%;padding:8px;"></textarea>
+      </div>
+      <button class="btn" onclick="saveTestResult()">Save Result</button>
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <script src="storage.js"></script>
+  <script src="test-data.js"></script>
+  <script src="technician.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
