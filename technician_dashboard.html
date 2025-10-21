@@ -1,163 +1,77 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Technician Dashboard - Alpha-Med Clinical Lab</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Technician Dashboard — Prime Medical Lab</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f8f9fa;
-      padding: 20px;
-    }
-
-    .dashboard {
-      max-width: 900px;
-      margin: auto;
-      background: #fff;
-      border-radius: 8px;
-      padding: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-
-    h2 {
-      text-align: center;
-      color: #2c3e50;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    select, input, button {
-      width: 100%;
-      padding: 8px 10px;
-      margin-top: 5px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    #normalRange {
-      margin-top: 5px;
-      color: #555;
-      font-size: 13px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 30px;
-    }
-
-    th, td {
-      border: 1px solid #dee2e6;
-      padding: 10px;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    th {
-      background-color: #007bff;
-      color: white;
-    }
-
-    #searchInput {
-      margin-bottom: 15px;
-      padding: 8px;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 13px;
-      color: #888;
-      margin-top: 40px;
-    }
-
-    @media (max-width: 600px) {
-      .dashboard {
-        padding: 20px;
-      }
-
-      th, td {
-        font-size: 12px;
-        padding: 8px;
-      }
-
-      h2 {
-        font-size: 20px;
-      }
-    }
-  </style>
+  <link rel="icon" href="logo.png" />
 </head>
 <body>
+  <!-- Header -->
+  <header class="topbar">
+    <div class="container">
+      <div class="brand">
+        <img src="logo.png" alt="Lab Logo" class="logo" />
+        <h1>Technician Dashboard</h1>
+      </div>
+      <nav class="main-nav">
+        <a href="technician_dashboard.html" class="active">Dashboard</a>
+        <a href="add_test_result.html">Add Test Result</a>
+        <a href="view_reports.html">View Reports</a>
+        <button onclick="logout()" class="btn-logout">Logout</button>
+      </nav>
+    </div>
+  </header>
 
-<div class="dashboard">
-  <h2>👨‍🔬 Technician Dashboard</h2>
+  <!-- Main -->
+  <main class="container main-content">
+    <section class="dashboard-header">
+      <h2>Welcome, <span id="currentUser"></span></h2>
+      <p>Manage and update patient test results efficiently.</p>
+    </section>
 
-  <div class="form-group">
-    <label for="patientSelect">Select Registered Patient:</label>
-    <select id="patientSelect"></select>
-  </div>
+    <section class="dashboard-grid">
+      <div class="card">
+        <h3>Add Test Result</h3>
+        <p>Enter results for patients whose samples are received.</p>
+        <a href="add_test_result.html" class="btn">Open</a>
+      </div>
 
-  <div class="form-group">
-    <label for="testName">Test Name:</label>
-    <input type="text" id="testName" placeholder="e.g. Blood Sugar, Hemoglobin" />
-    <div id="normalRange"></div>
-  </div>
+      <div class="card">
+        <h3>Pending Tests</h3>
+        <p>View list of patients awaiting test results.</p>
+        <a href="add_test_result.html#pending" class="btn">View</a>
+      </div>
 
-  <div class="form-group">
-    <label for="testResult">Result:</label>
-    <input type="text" id="testResult" placeholder="Enter result value" />
-  </div>
+      <div class="card">
+        <h3>Completed Reports</h3>
+        <p>View and manage all completed test reports.</p>
+        <a href="view_reports.html" class="btn">Open</a>
+      </div>
 
-  <button onclick="addTestResult()">Add Result</button>
+      <div class="card">
+        <h3>Export Data</h3>
+        <p>Export patient test records for ISO audit or data review.</p>
+        <a href="export.html" class="btn">Open</a>
+      </div>
+    </section>
+  </main>
 
-  <input type="text" id="searchInput" onkeyup="filterResults()" placeholder="Search results..." />
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; <span id="year"></span> Prime Medical Lab — Technician Dashboard</p>
+    </div>
+  </footer>
 
-  <table id="resultsTable">
-    <thead>
-      <tr>
-        <th>Patient</th>
-        <th>Test</th>
-        <th>Result</th>
-        <th>Normal Range</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Dynamic content -->
-    </tbody>
-  </table>
-
-  <div class="footer">
-    &copy; 2025 Alpha-Med Clinical Lab. All rights reserved.
-  </div>
-</div>
-
-<script src="test-data.js"></script>
-<script src="technician.js"></script>
+  <!-- JS -->
+  <script src="storage.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      showCurrentUserInfo();
+    });
+  </script>
 </body>
 </html>
