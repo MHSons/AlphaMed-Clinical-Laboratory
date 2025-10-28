@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AlphaMed Clinical Laboratory - Professional Diagnostic Services" />
+  <meta name="theme-color" content="#2c3e50" />
+  <title>AlphaMed Clinical Laboratory</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/logo.png" type="image/png" />
+
+  <!-- Preload -->
+  <link rel="preload" href="css/style.css" as="style" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="header">
+    <div class="container header-inner">
+      <div class="brand">
+        <img src="assets/logo.png" alt="AlphaMed Logo" class="logo" />
+        <div>
+          <h1>AlphaMed</h1>
+          <p>Clinical Laboratory</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <ul id="navList">
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register_patient.html">Register Patient</a></li>
+          <li><a href="view_reports.html">View Reports</a></li>
+        </ul>
+        <button class="nav-toggle" aria-label="Toggle menu" aria-controls="navList">
+          <span class="hamburger"></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="main">
+    <section class="hero">
+      <div class="container">
+        <h2>Accurate Diagnostics, Trusted Results</h2>
+        <p>State-of-the-art laboratory management system for seamless patient care.</p>
+        <div class="actions">
+          <a href="login.html" class="btn btn-primary">Login</a>
+          <a href="register_patient.html" class="btn btn-secondary">Register Patient</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container">
+        <div class="grid">
+          <div class="card">
+            <i class="fas fa-user-plus"></i>
+            <h3>Register Patients</h3>
+            <p>Quick and easy patient registration with unique ID.</p>
+          </div>
+          <div class="card">
+            <i class="fas fa-vial"></i>
+            <h3>Book Tests</h3>
+            <p>Book blood, urine, X-ray, and 50+ tests instantly.</p>
+          </div>
+          <div class="card">
+            <i class="fas fa-file-medical"></i>
+            <h3>View Reports</h3>
+            <p>Download PDF reports with lab branding.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 AlphaMed Clinical Laboratory. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/utils.js"></script>
+</body>
+</html>

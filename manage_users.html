@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Manage Users - AlphaMed LabPro" />
+  <title>Manage Users | AlphaMed</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="dashboard">
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="header">
+    <div class="container header-inner">
+      <div class="brand">
+        <img src="assets/logo.png" alt="AlphaMed Logo" class="logo" />
+        <div>
+          <h1>AlphaMed</h1>
+          <p>Manage Users</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <ul id="navList">
+          <li><a href="admin.html">Dashboard</a></li>
+          <li><a href="manage_users.html" class="active">Users</a></li>
+          <li><a href="#" id="logout">Logout</a></li>
+        </ul>
+        <button class="nav-toggle" aria-label="Toggle menu" aria-controls="navList">
+          <span class="hamburger"></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="main dashboard-main">
+    <div class="container">
+      <div class="dashboard-header">
+        <h2>User Management</h2>
+        <button class="btn btn-primary" id="addUserBtn">
+          <i class="fas fa-plus"></i> Add User
+        </button>
+      </div>
+
+      <div class="table-card">
+        <div id="usersTable" class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Add/Edit Modal -->
+      <div id="userModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 id="modalTitle">Add User</h3>
+            <button class="close-modal">&times;</button>
+          </div>
+          <form id="userForm">
+            <input type="hidden" id="editId" />
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Username <span class="req">*</span></label>
+                <input type="text" id="username" required minlength="3" />
+              </div>
+              <div class="form-group">
+                <label>Full Name <span class="req">*</span></label>
+                <input type="text" id="fullName" required />
+              </div>
+              <div class="form-group">
+                <label>Password <span class="req">*</span></label>
+                <input type="password" id="password" required minlength="5" />
+              </div>
+              <div class="form-group">
+                <label>Role <span class="req">*</span></label>
+                <select id="role" required>
+                  <option value="">Select</option>
+                  <option value="admin">Administrator</option>
+                  <option value="reception">Receptionist</option>
+                  <option value="technician">Lab Technician</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i> Save
+              </button>
+              <button type="button" class="btn btn-secondary close-modal">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 AlphaMed Clinical Laboratory</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/manage_users.js"></script>
+  <script type="module" src="js/utils.js"></script>
+</body>
+</html>
